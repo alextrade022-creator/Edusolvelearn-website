@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: theme('colors.brand.ink');
+    font-family: theme('fontFamily.sans');
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  /* Uppercase eyebrow label used above every section heading */
+  .eyebrow {
+    @apply font-heading font-bold text-sm uppercase tracking-[0.06em] text-brand-green;
+  }
+
+  /* Shared section title styling */
+  .section-title {
+    @apply font-heading font-extrabold leading-[1.12] tracking-[-0.01em] text-brand-ink;
+  }
+
+  /* Pill CTA buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-heading font-semibold rounded-full
+           transition-transform duration-150 no-underline whitespace-nowrap;
+  }
+}
+
+/* Reusable animated dashed connector line for the "How it works" steps */
+@keyframes es-flow {
+  to {
+    background-position: 22px 0;
+  }
+}
+@keyframes es-travel {
+  0% { left: 0; }
+  45% { left: 100%; }
+  50% { left: 100%; }
+  95% { left: 0; }
+  100% { left: 0; }
+}
+@keyframes es-fill {
+  to { height: 100%; }
+}
