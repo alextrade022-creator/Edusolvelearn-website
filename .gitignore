@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+
+# Build output (published to the "deploy" branch by CI, not committed to main)
+dist
+dist-ssr
+
+# Local / editor
+*.local
+.DS_Store
+.claude
+.vite
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
