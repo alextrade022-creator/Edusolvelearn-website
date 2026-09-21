@@ -46,7 +46,7 @@ export default function Home() {
           <div>
             <div className="inline-flex items-center gap-2.5 bg-surface-leaf border border-brand-green/50 px-4 py-1.5 rounded-full text-[13.5px] font-bold text-[#5a6b2f] mb-[22px]">
               <span className="w-2 h-2 rounded-full bg-brand-green inline-block" />
-              Live 1-on-1 online tuition · Trusted by Gulf families
+              Live 3-on-3 online tuition · Trusted by Gulf families
             </div>
             <h1 className="font-heading font-extrabold text-[38px] sm:text-[52px] leading-[1.08] tracking-[-0.02em] mb-5">
               The personal tutor your child <span className="text-brand-red">deserves</span> — live,
