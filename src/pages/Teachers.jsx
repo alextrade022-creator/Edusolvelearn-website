@@ -1,7 +1,6 @@
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import CtaSection from '../components/ui/CtaSection';
-import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import { TEACHERS_VETTING, TEACHERS_QUALITIES, TEACHERS_TUTORS } from '../data/content';
 
@@ -69,33 +68,36 @@ export default function Teachers() {
           <SectionHeading
             eyebrow="Meet a few of our tutors"
             title="Familiar faces, exceptional teaching"
-            subtitle="A snapshot of the team — drop in your real tutor photos and details anytime."
+            subtitle="Meet some of the caring, expert tutors your child could learn with."
             size="md"
             className="mb-11"
           />
           <div className="grid gap-[26px] grid-cols-1 min-[600px]:grid-cols-2 min-[900px]:grid-cols-3">
-            {TEACHERS_TUTORS.map((tutor, i) => (
+            {TEACHERS_TUTORS.map((tutor) => (
               <div
-                key={i}
+                key={tutor.name}
                 className="border border-[#eceee9] rounded-[20px] overflow-hidden bg-white shadow-card"
               >
                 <div className="aspect-square bg-[#eef0ec]">
-                  <ImagePlaceholder label="Tutor photo" />
+                  <img
+                    src={tutor.photo}
+                    alt={`${tutor.name}, ${tutor.subjects.join(', ')} tutor at EduSolve`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="px-6 py-[22px]">
-                  <div className="flex items-center justify-between gap-2.5 mb-1">
-                    <h3 className="font-heading font-bold text-lg">{tutor.name}</h3>
-                    <span className="text-[13px] font-bold text-[#f5a623]">★ {tutor.rating}</span>
+                  <h3 className="font-heading font-bold text-lg mb-1.5">{tutor.name}</h3>
+                  <div className="text-sm text-brand-green-dark font-bold mb-3">
+                    {tutor.subjects.join(' · ')}
                   </div>
-                  <div className="text-sm text-brand-green-dark font-bold mb-2.5">{tutor.subject}</div>
-                  <p className="text-sm leading-relaxed text-body mb-3.5">{tutor.bio}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {tutor.tags.map((tag) => (
+                    {tutor.subjects.map((subject) => (
                       <span
-                        key={tag}
+                        key={subject}
                         className="text-[11.5px] font-semibold text-brand-ink bg-[#f2f3f0] px-2.5 py-1 rounded-md"
                       >
-                        {tag}
+                        {subject}
                       </span>
                     ))}
                   </div>

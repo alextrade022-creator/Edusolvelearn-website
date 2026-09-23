@@ -17,7 +17,7 @@ import {
   HOME_BENEFITS,
   HOME_STEPS,
   SUBJECTS,
-  HOME_TUTORS,
+  TEACHERS_TUTORS,
   HOME_FAQS,
   CURRICULA_CHIPS,
   TESTIMONIAL_VIDEO_IDS,
@@ -240,22 +240,25 @@ export default function Home() {
               Meet our teachers →
             </Link>
           </div>
-          <div className="grid gap-6 grid-cols-1 min-[960px]:grid-cols-3">
-            {HOME_TUTORS.map((tutor, i) => (
+          <div className="grid gap-6 grid-cols-1 min-[600px]:grid-cols-2 min-[960px]:grid-cols-3">
+            {TEACHERS_TUTORS.slice(0, 3).map((tutor) => (
               <div
-                key={i}
+                key={tutor.name}
                 className="border border-[#eceee9] rounded-[20px] overflow-hidden bg-white shadow-card"
               >
                 <div className="aspect-[4/3] bg-[#eef0ec]">
-                  <ImagePlaceholder label="Tutor photo" />
+                  <img
+                    src={tutor.photo}
+                    alt={`${tutor.name}, ${tutor.subjects.join(', ')} tutor at EduSolve`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="px-[22px] py-5">
-                  <div className="flex items-center justify-between gap-2.5 mb-1">
-                    <h3 className="font-heading font-bold text-lg">{tutor.name}</h3>
-                    <span className="text-[13px] font-bold text-[#f5a623]">★ {tutor.rating}</span>
+                  <h3 className="font-heading font-bold text-lg mb-1.5">{tutor.name}</h3>
+                  <div className="text-sm text-brand-green-dark font-bold">
+                    {tutor.subjects.join(' · ')}
                   </div>
-                  <div className="text-sm text-brand-green-dark font-bold mb-2">{tutor.subject}</div>
-                  <p className="text-sm leading-snug text-body">{tutor.bio}</p>
                 </div>
               </div>
             ))}

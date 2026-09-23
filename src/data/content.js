@@ -47,11 +47,8 @@ export const HOME_STEPS = [
   { n: '4', title: 'Progress Tracking', text: 'Ongoing lessons with regular reports, feedback and parent check-ins.' },
 ];
 
-export const HOME_TUTORS = [
-  { name: 'Tutor Name', subject: 'Mathematics · CBSE / IGCSE', rating: '4.9', bio: 'M.Sc. Mathematics with 8+ years guiding Gulf students to top grades.' },
-  { name: 'Tutor Name', subject: 'Physics · IB / American', rating: '5.0', bio: 'Patient, exam-focused mentor who makes tough concepts click.' },
-  { name: 'Tutor Name', subject: 'English · ICSE / IGCSE', rating: '4.8', bio: 'Builds reading, writing and confidence for young learners.' },
-];
+// Home page shows a preview of the first few real tutors — see TEACHERS_TUTORS
+// (imported directly in Home.jsx) as the single source of truth.
 
 export const HOME_FAQS = [
   { q: 'Is the first demo class really free?', a: 'Yes — completely free. You meet the tutor, watch a real one-on-one class, and only decide afterwards. No payment details needed to book it.' },
@@ -135,13 +132,15 @@ export const TEACHERS_QUALITIES = [
   { icon: '🌐', title: 'Curriculum fluency', text: 'Day-to-day experience with CBSE, ICSE, IGCSE, IB and American syllabi.' },
 ];
 
+// Real EduSolve tutors. Each teacher lists the subject(s) they teach; the
+// photo lives in /public/images/teachers/.
 export const TEACHERS_TUTORS = [
-  { name: 'Tutor Name', rating: '4.9', subject: 'Mathematics · CBSE / IGCSE', bio: 'M.Sc. Mathematics, 8+ years turning maths anxiety into confidence for Gulf students.', tags: ['CBSE', 'IGCSE'] },
-  { name: 'Tutor Name', rating: '5.0', subject: 'Physics · IB / American', bio: 'Makes tough concepts click with real-world examples and steady exam practice.', tags: ['IB', 'AP'] },
-  { name: 'Tutor Name', rating: '4.8', subject: 'English · ICSE / IGCSE', bio: 'Builds reading, writing and speaking confidence in learners of every age.', tags: ['ICSE', 'IGCSE'] },
-  { name: 'Tutor Name', rating: '4.9', subject: 'Chemistry · CBSE / ISC', bio: 'Clear, structured teaching with a focus on scoring well in board exams.', tags: ['CBSE', 'ISC'] },
-  { name: 'Tutor Name', rating: '5.0', subject: 'Biology · IGCSE / IB', bio: 'Passionate biologist who brings diagrams and concepts vividly to life.', tags: ['IGCSE', 'IB'] },
-  { name: 'Tutor Name', rating: '4.8', subject: 'Primary · All boards', bio: 'Gentle, playful teaching that gives young learners a strong, happy start.', tags: ['LKG–5', 'All boards'] },
+  { name: 'Aleena', photo: '/images/teachers/aleena.jpeg', subjects: ['Science'] },
+  { name: 'Fabeena', photo: '/images/teachers/fabeena.jpeg', subjects: ['Mathematics'] },
+  { name: 'Suseela', photo: '/images/teachers/suseela.jpeg', subjects: ['Hindi'] },
+  { name: 'Asthami', photo: '/images/teachers/asthami.jpeg', subjects: ['Science'] },
+  { name: 'Afeefa', photo: '/images/teachers/afeefa.jpeg', subjects: ['Mathematics'] },
+  { name: 'Arwa Jasmin', photo: '/images/teachers/arwa-jasmin.jpeg', subjects: ['English', 'Mathematics', 'EVS'] },
 ];
 
 // ---- Testimonials ----
