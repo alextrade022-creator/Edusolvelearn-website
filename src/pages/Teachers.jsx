@@ -119,7 +119,7 @@ export default function Teachers() {
             We’re always looking for caring, expert tutors to join EduSolve. If you love teaching
             one-on-one and want flexible online hours, we’d love to hear from you.
           </p>
-          <Button to="/contact" variant="green">
+          <Button to="/teach" variant="green">
             Apply to teach →
           </Button>
         </div>

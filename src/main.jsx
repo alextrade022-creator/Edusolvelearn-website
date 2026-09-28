@@ -2,12 +2,16 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
+import LenisScroll from './components/layout/LenisScroll.jsx';
 import './index.css';
+import 'lenis/dist/lenis.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <LenisScroll>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </LenisScroll>
   </StrictMode>
 );

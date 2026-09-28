@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { WhatsAppIcon } from '../icons';
 import Button from '../ui/Button';
@@ -8,6 +8,32 @@ import logo from '/images/edusolve-logo.png';
 // Sticky top navigation. Desktop nav collapses into a burger menu below 1130px.
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
+
+  useEffect(() => {
+    let previousScrollY = window.scrollY;
+
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Direction-driven navbar state machine:
+      // top -> visible, down -> hidden, up -> visible.
+      if (currentScrollY === 0) {
+        setHeaderVisible(true);
+      } else if (currentScrollY > previousScrollY) {
+        setHeaderVisible(false);
+      } else if (currentScrollY < previousScrollY) {
+        setHeaderVisible(true);
+      }
+
+      previousScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   const desktopLinkClass = ({ isActive }) =>
     `font-sans font-semibold text-[15px] px-3.5 py-2 rounded-lg transition-colors whitespace-nowrap hover:text-brand-red ${
@@ -20,8 +46,13 @@ export default function Header() {
     }`;
 
   return (
-    <header className="sticky top-0 z-[100] bg-white font-sans shadow-[0_1px_0_rgba(22,26,29,.06),0_6px_20px_rgba(22,26,29,.05)]">
-      <div className="max-w-container mx-auto px-6 h-[74px] flex items-center gap-5">
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-[100] bg-white font-sans shadow-[0_1px_0_rgba(22,26,29,.06),0_6px_20px_rgba(22,26,29,.05)] will-change-transform transition-transform duration-300 ease-out ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        <div className="max-w-container mx-auto px-6 h-[74px] flex items-center gap-5">
         <Link to="/" className="flex items-center flex-none mr-auto" aria-label="EduSolve home">
           <img src={logo} alt="EduSolve — We Find & Solve It" className="h-[46px] w-auto block" />
         </Link>
@@ -66,25 +97,27 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="min-[1130px]:hidden border-t border-brand-ink/[.08] bg-white px-6 pt-2.5 pb-4">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={mobileLinkClass}
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          <Button to="/contact" className="w-full mt-3 !rounded-xl" onClick={() => setMobileOpen(false)}>
-            Book a Free Demo
-          </Button>
-        </div>
-      )}
-    </header>
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div className="min-[1130px]:hidden border-t border-brand-ink/[.08] bg-white px-6 pt-2.5 pb-4">
+            {NAV_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === '/'}
+                className={mobileLinkClass}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+            <Button to="/contact" className="w-full mt-3 !rounded-xl" onClick={() => setMobileOpen(false)}>
+              Book a Free Demo
+            </Button>
+          </div>
+        )}
+      </header>
+      <div aria-hidden="true" className="h-[74px]" />
+    </>
   );
 }
