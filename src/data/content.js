@@ -133,14 +133,13 @@ export const TEACHERS_QUALITIES = [
 ];
 
 // Real EduSolve tutors. Each teacher lists the subject(s) they teach; the
-// photo lives in /public/images/teachers/.
+// photo lives in /public/Teachers photos/.
 export const TEACHERS_TUTORS = [
-  { name: 'Aleena', photo: '/images/teachers/aleena.jpeg', subjects: ['Science'] },
-  { name: 'Fabeena', photo: '/images/teachers/fabeena.jpeg', subjects: ['Mathematics'] },
-  { name: 'Suseela', photo: '/images/teachers/suseela.jpeg', subjects: ['Hindi'] },
-  { name: 'Asthami', photo: '/images/teachers/asthami.jpeg', subjects: ['Science'] },
-  { name: 'Afeefa', photo: '/images/teachers/afeefa.jpeg', subjects: ['Mathematics'] },
-  { name: 'Arwa Jasmin', photo: '/images/teachers/arwa-jasmin.jpeg', subjects: ['English', 'Mathematics', 'EVS'] },
+  { name: 'Aleena', photo: '/Teachers photos/aleena (science).jpeg', subjects: ['Science'] },
+  { name: 'Suseela', photo: '/Teachers photos/suseela (hindi).jpeg', subjects: ['Hindi'] },
+  { name: 'Asthami', photo: '/Teachers photos/asthami (science).jpeg', subjects: ['Science'] },
+  { name: 'Afeefa', photo: '/Teachers photos/Afeefa (maths).jpeg', subjects: ['Mathematics'] },
+  { name: 'Arwa Jasmin', photo: '/Teachers photos/Arwa jasmin (eng,maths,evs).jpeg', subjects: ['English', 'Mathematics', 'EVS'] },
 ];
 
 // ---- Testimonials ----
