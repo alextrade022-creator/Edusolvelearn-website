@@ -1,0 +1,1 @@
+import{j as r}from"./index-8Z11T5ir.js";import{L as t}from"./LegalPage-DkkyoZeh.js";import{P as o}from"./content-CbxGahah.js";function e(){return r.jsx(t,{title:"Privacy Policy",sections:o})}export{e as default};

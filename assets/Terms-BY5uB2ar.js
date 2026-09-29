@@ -1,0 +1,1 @@
+import{j as r}from"./index-8Z11T5ir.js";import{L as t}from"./LegalPage-DkkyoZeh.js";import{r as o}from"./content-CbxGahah.js";function m(){return r.jsx(t,{title:"Terms & Conditions",sections:o})}export{m as default};
