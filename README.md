@@ -58,9 +58,9 @@ columns on smaller screens.
 - Tutor photos and the hero image use a styled placeholder component
   (`ImagePlaceholder`) — swap them for real `<img>` tags when assets are ready.
 - Demo bookings and teacher applications post directly to Web3Forms; no backend or database is
-  required. Create a Web3Forms access key for the inbox you want to receive submissions, then add
-  it as `VITE_WEB3FORMS_ACCESS_KEY` in a local `.env` file (see `.env.example`). Add the same
-  environment variable in Hostinger before deploying.
+  required. The Web3Forms access key lives in `src/config.js` (`WEB3FORMS_KEY`). It is a public
+  key by design — it only allows submissions to our inbox and ships in the browser bundle anyway —
+  so no environment variable is needed to build or deploy. `.env` is gitignored; never commit it.
 - Legal pages (Privacy, Terms) carry the original placeholder text — have them reviewed by a legal
   professional before publishing.
 ```
