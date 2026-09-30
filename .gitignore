@@ -12,6 +12,7 @@ dist-ssr
 .DS_Store
 .claude
 .vite
+implementation.txt
 
 # Logs
 npm-debug.log*
