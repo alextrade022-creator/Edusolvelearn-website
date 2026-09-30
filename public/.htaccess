@@ -1,26 +1,59 @@
-# SPA routing for React Router (BrowserRouter) on Apache / Hostinger.
-# Any request that is NOT a real file or directory is served index.html,
-# so deep links like /courses or /contact work on refresh and direct visits.
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
+# Apache / Hostinger config for the statically exported Next.js site.
+# Every route is a real folder with an index.html (trailingSlash: true), so no
+# SPA fallback is needed: /courses/ serves out/courses/index.html directly.
 
-  # Don't rewrite real files or directories (assets, images, etc.)
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
+Options -Indexes
+DirectoryIndex index.html
 
-  # Everything else -> index.html (React Router takes over client-side)
-  RewriteRule ^ index.html [L]
+# Real 404 status for unknown URLs, using the exported 404 page.
+ErrorDocument 404 /404.html
+
+# Social-sharing images are exported without a file extension
+# (…/opengraph-image) and re-encoded as JPEG after the build.
+<FilesMatch "^opengraph-image$">
+  ForceType image/jpeg
+</FilesMatch>
+
+# Feed and sitemap content types
+<Files "rss.xml">
+  ForceType "application/rss+xml; charset=utf-8"
+</Files>
+<Files "sitemap.xml">
+  ForceType "application/xml; charset=utf-8"
+</Files>
+
+# ---------------------------------------------------------------------------
+# Compression
+# ---------------------------------------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml application/javascript application/json application/xml image/svg+xml
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/xml image/svg+xml
 </IfModule>
 
-# Long-cache the fingerprinted build assets (safe: filenames change on rebuild).
+# ---------------------------------------------------------------------------
+# Caching
+# ---------------------------------------------------------------------------
 <IfModule mod_headers.c>
-  <FilesMatch "\.(js|css|woff2?|png|jpe?g|gif|svg|ico)$">
+  # Fingerprinted build assets and generated image sizes never change: cache for a year.
+  <If "%{REQUEST_URI} =~ m#^/(_next/static|nextImageExportOptimizer)/#">
     Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  # Other static files (logo, fonts, icons): cache for a week.
+  <FilesMatch "\.(png|jpe?g|webp|avif|gif|svg|ico|woff2?)$">
+    Header setifempty Cache-Control "public, max-age=604800"
   </FilesMatch>
-  # Never cache the HTML shell, so new deploys are picked up immediately.
-  <FilesMatch "\.html$">
+  # HTML and route payloads: always revalidate so new deploys show immediately.
+  <FilesMatch "\.(html|txt)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
+
+  # -------------------------------------------------------------------------
+  # Security headers
+  # -------------------------------------------------------------------------
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
 </IfModule>
