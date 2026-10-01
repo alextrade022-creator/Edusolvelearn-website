@@ -58,6 +58,23 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Sticky header height (h-16 / md:h-[4.75rem] in Header.tsx). */
+:root {
+  --header-h: 4rem;
+}
+@media (width >= 48rem) {
+  :root {
+    --header-h: 4.75rem;
+  }
+}
+
+/* Scroll room for a pinned element inside its parent (set by PinnedScroll). */
+[data-pin-room]::after {
+  content: '';
+  display: block;
+  height: var(--pin-room, 0);
+}
+
 /* next/font exposes the font families as CSS variables on <html>. */
 @theme inline {
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -142,6 +159,18 @@
   }
   @media (width >= 80rem) {
     padding-top: 9rem;
+  }
+}
+
+/* First section under a short page hero (30% less than section-space). */
+@utility section-space-tight {
+  padding-top: 3.875rem;
+
+  @media (width >= 48rem) {
+    padding-top: 4.875rem;
+  }
+  @media (width >= 80rem) {
+    padding-top: 6.25rem;
   }
 }
 

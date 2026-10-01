@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import Image from 'next-image-export-optimizer';
-import { CheckIcon, ClockIcon, PinIcon } from '@/components/icons';
+import { ArrowRightIcon, CheckIcon } from '@/components/icons';
+import { PinnedScroll } from '@/components/motion/PinnedScroll';
 import { Reveal } from '@/components/motion/Reveal';
 import { ZoomIn } from '@/components/motion/ZoomIn';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { ArrowLink, ButtonLink } from '@/components/ui/Button';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { Section } from '@/components/ui/Section';
@@ -11,6 +13,7 @@ import { CURRICULA } from '@/content/curricula';
 import { CENTRES, FOUNDER, HOME_BENEFITS, HOME_STEPS, TUTOR_CHECKS, TUTOR_QUALITIES } from '@/content/home';
 import { LIFE_PREVIEW } from '@/content/life';
 import { CONTACT } from '@/content/site';
+import { centreSchema } from '@/lib/structuredData';
 import { CurriculaPanels } from './CurriculaPanels';
 import { StepsTimeline } from './StepsTimeline';
 import { TutorApprovalCard } from './TutorApprovalCard';
@@ -32,14 +35,19 @@ export function CurriculaSection() {
 
 export function HowItWorksSection() {
   return (
-    <Section labelledBy="how-title" className="flex flex-col gap-10 lg:gap-16">
-      <SectionHeading
-        id="how-title"
-        eyebrow="How it works"
-        title="From first hello to steady progress"
-        action={<ArrowLink href="/how-it-works/">See the full process</ArrowLink>}
-      />
-      <StepsTimeline steps={HOME_STEPS} />
+    <Section labelledBy="how-title">
+      {/* Home only: pinned while the line draws through the steps. */}
+      <PinnedScroll distance={100} className="flex flex-col gap-10 lg:gap-16">
+        <SectionHeading
+          id="how-title"
+          eyebrow="How it works"
+          title="From first hello to steady progress"
+          action={<ArrowLink href="/how-it-works/">See the full process</ArrowLink>}
+        />
+        <div data-pin-focus>
+          <StepsTimeline steps={HOME_STEPS} />
+        </div>
+      </PinnedScroll>
     </Section>
   );
 }
@@ -60,31 +68,39 @@ export function WhySection() {
 
 export function TutorsSection() {
   return (
-    <Section labelledBy="tutors-title" className="grid items-center gap-10 lg:grid-cols-2 lg:gap-[5.5rem]">
-      <div className="flex flex-col gap-8 lg:gap-9">
-        <SectionHeading
-          id="tutors-title"
-          eyebrow="Our tutors"
-          title="Only the right tutors reach your child"
-          intro="Every EduSolve tutor passes the same careful selection before they teach, so whoever is matched with your child meets the same high bar."
-        />
-        <ul className="flex flex-col gap-4.5">
-          {TUTOR_QUALITIES.map((quality) => (
-            <li key={quality.strong} className="flex items-start gap-3.5 leading-relaxed">
-              <CheckIcon size={22} className="mt-0.5 shrink-0 text-green" />
-              <span>
-                <strong className="font-bold">{quality.strong}</strong> <span className="text-body">{quality.rest}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <ArrowLink href="/teachers/" className="self-start">
-          How we select tutors
-        </ArrowLink>
-      </div>
-      <div className="flex justify-center rounded-panel border border-line bg-panel px-4 py-8 sm:px-10 sm:py-12 lg:min-h-[35rem] lg:items-center">
-        <TutorApprovalCard checks={TUTOR_CHECKS} subject="Mathematics · CBSE & IGCSE" />
-      </div>
+    <Section labelledBy="tutors-title">
+      {/* Home only: pinned while the checks tick through and the seal stamps on. */}
+      <PinnedScroll distance={110}>
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-[5.5rem]">
+          <div className="flex flex-col gap-8 lg:gap-9">
+            <SectionHeading
+              id="tutors-title"
+              eyebrow="Our tutors"
+              title="Only the right tutors reach your child"
+              intro="Every EduSolve tutor passes the same careful selection before they teach, so whoever is matched with your child meets the same high bar."
+            />
+            <ul className="flex flex-col gap-4.5">
+              {TUTOR_QUALITIES.map((quality) => (
+                <li key={quality.strong} className="flex items-start gap-3.5 leading-relaxed">
+                  <CheckIcon size={22} className="mt-0.5 shrink-0 text-green" />
+                  <span>
+                    <strong className="font-bold">{quality.strong}</strong> <span className="text-body">{quality.rest}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <ArrowLink href="/teachers/" className="self-start">
+              How we select tutors
+            </ArrowLink>
+          </div>
+          <div
+            data-pin-focus
+            className="flex justify-center rounded-panel border border-line bg-panel px-4 py-8 sm:px-10 sm:py-12 lg:min-h-[35rem] lg:items-center"
+          >
+            <TutorApprovalCard checks={TUTOR_CHECKS} subject="Mathematics · CBSE & IGCSE" />
+          </div>
+        </div>
+      </PinnedScroll>
     </Section>
   );
 }
@@ -132,37 +148,52 @@ export function CentresSection() {
     <Section labelledBy="centres-title" className="flex flex-col gap-10 lg:gap-12">
       <SectionHeading
         id="centres-title"
-        eyebrow="Our centres in Kerala"
-        title="Moving back home? Learn with us in person."
-        intro="EduSolve runs two learning centres in Kerala. If your family moves back, your child can keep learning with us — in a classroom."
+        eyebrow="Our centres"
+        title="Online first, with roots in Kozhikode"
+        intro="Behind every online class is a team based in Kozhikode, Kerala, where EduSolve also runs two learning centres. Classes at the centres have their own batches and enrolment."
         action={
           <ButtonLink href={CONTACT.whatsappUrl} external variant="outline" withArrow className="w-full md:w-auto">
-            Talk to us about moving back
+            Ask about our centres
           </ButtonLink>
         }
       />
-      <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+      {CENTRES.map((centre) => (
+        <JsonLd key={centre.id} data={centreSchema(centre)} />
+      ))}
+      <ol className="border-t border-line">
         {CENTRES.map((centre, index) => (
-          <Reveal key={centre.id} delay={index * 0.1} className="flex flex-col gap-5 rounded-card border border-line bg-white p-3.5 pb-6 xl:flex-row xl:items-stretch xl:gap-6 xl:p-4">
-            <ImagePlaceholder label="Photo of the centre" className="h-48 shrink-0 rounded-xl md:h-56 xl:h-60 xl:w-[16.25rem]" />
-            <div className="flex grow flex-col justify-between gap-5 px-2 xl:py-2.5 xl:pr-2 xl:pl-0">
-              <div className="flex flex-col gap-3.5">
-                <p className="text-[0.8125rem] font-bold text-red">Centre {String(index + 1).padStart(2, '0')}</p>
-                <h3 className="font-serif text-[1.625rem] font-medium tracking-[-0.02em] lg:text-[1.875rem]">{centre.town}</h3>
-                <p className="flex items-start gap-2.5 text-[0.9375rem] leading-normal text-body">
-                  <PinIcon size={18} className="mt-0.5 shrink-0" /> {centre.address}
-                </p>
-                <p className="flex items-start gap-2.5 text-[0.9375rem] leading-normal text-body">
-                  <ClockIcon size={18} className="mt-0.5 shrink-0" /> {centre.timings}
-                </p>
-              </div>
-              <ArrowLink href={centre.mapsUrl} external className="self-start">
-                Get directions
-              </ArrowLink>
+          <li
+            key={centre.id}
+            className="grid gap-x-6 gap-y-3 border-b border-line py-7 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.3fr)] md:py-9 lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1.4fr)_auto_auto] lg:items-baseline lg:gap-x-10"
+          >
+            <span className="text-[0.8125rem] font-bold tracking-[0.06em] text-muted tabular-nums md:pt-2 lg:pt-0">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div className="flex flex-col gap-1">
+              <h3 className="font-serif text-[1.875rem] leading-tight font-medium tracking-[-0.02em] lg:text-[2.25rem]">{centre.name}</h3>
+              <p className="text-xs font-bold tracking-[0.08em] text-muted uppercase">{centre.city}, Kerala</p>
             </div>
-          </Reveal>
+            <address className="leading-relaxed text-body not-italic md:col-start-3 md:row-start-1 lg:col-start-auto lg:row-start-auto">
+              {centre.street}, {centre.locality} {centre.postalCode}
+            </address>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-1 md:col-start-3 lg:contents">
+              <a href={centre.phoneHref} className="inline-flex min-h-11 items-center font-semibold whitespace-nowrap tabular-nums transition-colors hover:text-red">
+                {centre.phone}
+              </a>
+              <a
+                href={centre.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex min-h-11 items-center gap-2 font-semibold whitespace-nowrap text-red transition-colors hover:text-red-dark"
+              >
+                Directions
+                <span className="sr-only"> to EduSolve {centre.name} (opens Google Maps)</span>
+                <ArrowRightIcon size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
+              </a>
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </Section>
   );
 }

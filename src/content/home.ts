@@ -72,17 +72,43 @@ export const FOUNDER = {
 
 export interface Centre {
   id: string;
-  town: string;
-  address: string;
-  timings: string;
+  /** Locality shown as the centre's name. */
+  name: string;
+  city: string;
+  street: string;
+  locality: string;
+  postalCode: string;
+  phone: string;
+  phoneHref: string;
   mapsUrl: string;
-  photo: string | null;
 }
 
-// PLACEHOLDER: real towns, addresses, timings and photos pending from the client.
+// Offline learning centres (both in Kozhikode / Calicut).
 export const CENTRES: readonly Centre[] = [
-  { id: 'centre-1', town: '[Town], Kerala', address: '[Full address]', timings: '[Days · timings]', mapsUrl: '#', photo: null },
-  { id: 'centre-2', town: '[Town], Kerala', address: '[Full address]', timings: '[Days · timings]', mapsUrl: '#', photo: null },
+  {
+    id: 'puthoormadam',
+    name: 'Puthoormadam',
+    city: 'Kozhikode',
+    street: 'First floor, Ali Complex, Puthoormadam Junction',
+    locality: 'Kozhikode',
+    postalCode: '673019',
+    phone: '+91 73567 41944',
+    phoneHref: 'tel:+917356741944',
+    mapsUrl:
+      'https://www.google.com/maps/place/Edusolve+learning+institute/@11.2379638,75.8678407,1446m/data=!3m1!1e3!4m6!3m5!1s0x20263c260170b4e5:0x74e3b610ae23458!8m2!3d11.2375998!4d75.8705072!16s%2Fg%2F11v3hb2sf8',
+  },
+  {
+    id: 'nadakkavu',
+    name: 'Nadakkavu',
+    city: 'Kozhikode',
+    street: 'First floor, Kidson Building, East Nadakkavu',
+    locality: 'Kozhikode',
+    postalCode: '673006',
+    phone: '+91 94970 85892',
+    phoneHref: 'tel:+919497085892',
+    mapsUrl:
+      'https://www.google.com/maps/place/Skill+fly/@11.2720452,75.7755549,950m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba65f86e8990321:0x18bff510bd1168ce!8m2!3d11.2720452!4d75.7781298!16s%2Fg%2F11xnd2cv7g',
+  },
 ];
 
 export interface FeaturedQuote {

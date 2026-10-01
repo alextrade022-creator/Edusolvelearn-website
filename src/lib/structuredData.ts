@@ -2,6 +2,7 @@
 
 import { PLAY_STORE_URL, SITE_NAME, SITE_URL } from '@/config';
 import type { FaqGroup } from '@/content/faq';
+import type { Centre } from '@/content/home';
 import { CONTACT, COUNTRIES_SERVED, SOCIAL_LINKS } from '@/content/site';
 import type { Post } from '@/lib/posts';
 
@@ -85,4 +86,24 @@ export const breadcrumbSchema = (items: readonly { name: string; path: string }[
     name: item.name,
     item: `${SITE_URL}${item.path}`,
   })),
+});
+
+/** Offline learning centres, linked to the organisation. */
+export const centreSchema = (centre: Centre) => ({
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  '@id': `${SITE_URL}/#centre-${centre.id}`,
+  name: `${SITE_NAME} ${centre.name}`,
+  url: `${SITE_URL}/`,
+  telephone: centre.phone,
+  hasMap: centre.mapsUrl,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: centre.street,
+    addressLocality: centre.locality,
+    addressRegion: 'Kerala',
+    postalCode: centre.postalCode,
+    addressCountry: 'IN',
+  },
+  parentOrganization: { '@id': ORG_ID },
 });

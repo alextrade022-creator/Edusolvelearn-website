@@ -79,7 +79,7 @@ Domain: https://edusolvelearn.com
 ## Open items (waiting on the client)
 
 - Real tutor hiring process (the 5 checks in `src/content/home.ts` are placeholders).
-- Centres: towns, addresses, timings, photos (+ LocalBusiness structured data).
+- Centres: details are live (`CENTRES` in `src/content/home.ts`, with structured data); timings not shown yet.
 - Life at EduSolve photos and captions; parental consent for student photos.
 - Blog: team review, then `draft: false`; CBSE post facts marked `[verify]`; IGCSE post needs a
   teacher read-through.

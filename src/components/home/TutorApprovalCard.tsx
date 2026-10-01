@@ -1,28 +1,60 @@
 'use client';
 
-import { m, useInView, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m, useInView, useMotionValueEvent, useMotionValue, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { CheckIcon } from '@/components/icons';
+import { usePinProgress } from '@/components/motion/PinnedScroll';
 import type { SelectionCheck } from '@/content/home';
 import { cn } from '@/lib/cn';
 import { ApprovalSeal } from './ApprovalSeal';
 
 const STEP_MS = 420;
+/** Pin progress at which every check is done (the rest is time to see the seal). */
+const PIN_COMPLETE_AT = 0.8;
 
-// "Tutor application" card: when it scrolls into view, the green line grows down
-// and each check fills in turn (grey → green outline → solid green). After the
-// last one, the Approved-to-teach seal stamps on. Plays once.
+// "Tutor application" card: the green line grows down and each check fills in
+// turn (grey → green outline → solid green); after the last one, the
+// Approved-to-teach seal stamps on.
+// - Inside a PinnedScroll (home page): driven by scroll while pinned, and fully
+//   reversible — scrolling back un-ticks the checks and lifts the seal.
+// - Elsewhere: plays once, on a timer, when the card scrolls into view.
 export function TutorApprovalCard({ checks, subject }: { checks: readonly SelectionCheck[]; subject: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.45 });
   const reduceMotion = useReducedMotion();
+  const pin = usePinProgress();
+  const idle = useMotionValue(0);
   const [progress, setProgress] = useState(0); // number of completed checks
+  const frame = useRef<number | null>(null);
+  const lastDone = useRef(0);
 
+  // Timed mode (not pinned).
   useEffect(() => {
-    if (!inView || reduceMotion) return;
+    if (pin || !inView || reduceMotion) return;
     const timers = checks.map((_, index) => window.setTimeout(() => setProgress(index + 1), 350 + index * STEP_MS));
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [inView, reduceMotion, checks]);
+  }, [pin, inView, reduceMotion, checks]);
+
+  // Scroll-driven mode (pinned). State updates are deferred to the next frame:
+  // motion values can change while React is rendering.
+  useMotionValueEvent(pin ?? idle, 'change', (value) => {
+    if (!pin) return;
+    const doneNow = Math.min(checks.length, Math.floor((value / PIN_COMPLETE_AT) * checks.length + 0.001));
+    if (doneNow === lastDone.current) return;
+    lastDone.current = doneNow;
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      frame.current = null;
+      setProgress(lastDone.current);
+    });
+  });
+
+  useEffect(
+    () => () => {
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+    },
+    [],
+  );
 
   const done = reduceMotion ? checks.length : progress;
   const complete = done === checks.length;
@@ -73,22 +105,31 @@ export function TutorApprovalCard({ checks, subject }: { checks: readonly Select
       </ol>
 
       <div className="my-5 h-px bg-line-soft" />
-      <p className={cn('text-[0.8125rem] font-semibold', complete ? 'text-green' : 'text-muted')} aria-live="polite">
-        {complete
-          ? `All ${checks.length} checks complete · ready to be matched with your child`
-          : `${done} of ${checks.length} checks complete`}
+      <p className={cn('flex items-center gap-1.5 text-[0.8125rem] font-semibold', complete ? 'text-green' : 'text-muted')} aria-live="polite">
+        {complete ? (
+          <>
+            <CheckIcon size={16} strokeWidth={2.6} className="shrink-0" />
+            All {checks.length} checks complete
+          </>
+        ) : (
+          `${done} of ${checks.length} checks complete`
+        )}
       </p>
 
-      {complete ? (
-        <m.div
-          className="pointer-events-none absolute right-2 top-[11.5rem] w-[4.9rem] md:top-[11.7rem] md:w-[8.1rem]"
-          initial={reduceMotion ? false : { scale: 1.3, opacity: 0, rotate: -4 }}
-          animate={{ scale: 1, opacity: 1, rotate: -12 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 18 }}
-        >
-          <ApprovalSeal className="h-auto w-full drop-shadow-[0_8px_16px_rgba(22,24,26,0.14)]" />
-        </m.div>
-      ) : null}
+      <AnimatePresence>
+        {complete ? (
+          <m.div
+            key="seal"
+            className="pointer-events-none absolute top-1/2 right-2 w-[4.9rem] -translate-y-1/2 md:w-[8.1rem]"
+            initial={reduceMotion ? false : { scale: 1.3, opacity: 0, rotate: -4 }}
+            animate={{ scale: 1, opacity: 1, rotate: -12 }}
+            exit={{ scale: 1.15, opacity: 0, rotate: -6, transition: { duration: 0.2 } }}
+            transition={{ type: 'spring', stiffness: 380, damping: 18 }}
+          >
+            <ApprovalSeal className="h-auto w-full drop-shadow-[0_8px_16px_rgba(22,24,26,0.14)]" />
+          </m.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

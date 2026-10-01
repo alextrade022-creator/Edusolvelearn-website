@@ -1,7 +1,8 @@
 'use client';
 
-import { m, useMotionValueEvent, useReducedMotion, useScroll, type MotionStyle } from 'motion/react';
+import { m, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionStyle } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
+import { usePinProgress } from '@/components/motion/PinnedScroll';
 import type { Step } from '@/content/home';
 import { cn } from '@/lib/cn';
 
@@ -15,11 +16,17 @@ interface StepsTimelineProps {
 
 // Steps joined by a line that draws as you scroll: across on laptop, down on
 // phones/tablets (or always down when `vertical`). Each number fills in as the
-// line reaches it.
+// line reaches it. Inside a PinnedScroll (home page) it follows the pin's
+// progress instead, so the drawing only starts once the section is pinned.
 export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
   const ref = useRef<HTMLOListElement>(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: vertical ? ['start 0.75', 'end 0.6'] : ['start 0.85', 'end 0.55'] });
+  // When pinned, finish a little before the pin ends so the result can be seen.
+  const pin = usePinProgress();
+  const idle = useMotionValue(0);
+  const pinned = useTransform(pin ?? idle, [0, 0.85], [0, 1]);
+  const source = pin ? pinned : scrollYProgress;
   const [reached, setReached] = useState(1);
   const lastCount = useRef(1);
   const frame = useRef<number | null>(null);
@@ -28,7 +35,7 @@ export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
   // state update is deferred to the next animation frame (and only made when the
   // number of lit steps actually changes). Updating state synchronously here
   // triggers React's "cannot update a component while rendering" error.
-  useMotionValueEvent(scrollYProgress, 'change', (value) => {
+  useMotionValueEvent(source, 'change', (value) => {
     const count = Math.max(1, Math.min(steps.length, Math.floor(value * (steps.length - 1) + 1.02)));
     if (count === lastCount.current) return;
     lastCount.current = count;
@@ -47,7 +54,7 @@ export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
   );
 
   const activeCount = reduceMotion ? steps.length : reached;
-  const lineStyle: MotionStyle = { ['--p' as string]: reduceMotion ? 1 : scrollYProgress };
+  const lineStyle: MotionStyle = { ['--p' as string]: reduceMotion ? 1 : source };
   const across = !vertical;
 
   const trackBase = 'absolute top-5 bottom-14 left-5 w-px';
