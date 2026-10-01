@@ -13,14 +13,17 @@ export function Container({ children, className }: ContainerProps) {
 
 interface SectionProps extends ContainerProps {
   id?: string;
-  /** Adds the standard top spacing between sections. */
-  spaced?: boolean;
+  /**
+   * Top spacing: the standard gap between sections (default), `'tight'` for the
+   * first section under a short page hero, or `false` for none.
+   */
+  spaced?: boolean | 'tight';
   labelledBy?: string;
 }
 
 export function Section({ children, className, id, spaced = true, labelledBy }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={labelledBy} className={cn(spaced && 'section-space')}>
+    <section id={id} aria-labelledby={labelledBy} className={cn(spaced === 'tight' ? 'section-space-tight' : spaced && 'section-space')}>
       <Container className={className}>{children}</Container>
     </section>
   );

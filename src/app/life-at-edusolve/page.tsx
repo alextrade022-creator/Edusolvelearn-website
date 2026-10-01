@@ -34,7 +34,7 @@ export default function LifeAtEduSolvePage() {
           {FACTS.map((fact, index) => (
             <div
               key={fact.label}
-              className={`flex flex-col-reverse gap-1.5 px-4 py-5 md:py-7 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line lg:border-b-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
+              className={`flex flex-col-reverse gap-1.5 px-4 py-5 md:py-7 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line lg:border-b-0' : ''} ${index === 2 ? 'lg:border-l lg:border-line' : ''}`}
             >
               <dt className="text-[0.8125rem] font-semibold text-muted">{fact.label}</dt>
               <dd className="font-serif text-[1.375rem] leading-tight font-medium md:text-[1.875rem]">{fact.value}</dd>

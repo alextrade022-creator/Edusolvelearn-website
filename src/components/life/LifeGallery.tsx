@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Reveal } from '@/components/motion/Reveal';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import type { LifeCategory, LifeItem } from '@/content/life';
 import { cn } from '@/lib/cn';
@@ -46,7 +47,7 @@ export function LifeGallery({ items, categories }: { items: readonly LifeItem[];
       </div>
 
       {featured ? (
-        <article className="grid items-center gap-6 rounded-panel border border-line bg-white p-3.5 pb-7 md:p-5 lg:grid-cols-12 lg:gap-12 lg:pb-5">
+        <Reveal className="grid items-center gap-6 rounded-panel border border-line bg-white p-3.5 pb-7 md:p-5 lg:grid-cols-12 lg:gap-12 lg:pb-5">
           <ImagePlaceholder label={featured.photoLabel} className="h-60 rounded-2xl md:h-[26rem] lg:col-span-7 lg:h-[28.75rem]" />
           <div className="flex flex-col gap-4 px-2 lg:col-span-5 lg:pr-7">
             <p className="flex items-center gap-3">
@@ -57,13 +58,13 @@ export function LifeGallery({ items, categories }: { items: readonly LifeItem[];
             {featured.summary ? <p className="text-lead text-body">{featured.summary}</p> : null}
             <p className="text-sm font-semibold text-muted">{featured.photoCount} photos</p>
           </div>
-        </article>
+        </Reveal>
       ) : null}
 
       {shown.length ? (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {shown.map((item) => (
-            <li key={item.id} className="flex flex-col gap-4 rounded-card border border-line bg-white p-3.5 pb-6 md:p-4 md:pb-7">
+          {shown.map((item, index) => (
+            <Reveal as="li" key={item.id} delay={(index % 3) * 0.08} className="flex flex-col gap-4 rounded-card border border-line bg-white p-3.5 pb-6 md:p-4 md:pb-7">
               <div className="relative">
                 <ImagePlaceholder label={item.photoLabel} className="h-56 rounded-[0.875rem] md:h-[17.5rem]" />
                 <span className="absolute right-3 bottom-3 rounded-full bg-ink/75 px-2.5 py-1 text-xs font-bold text-white">{item.photoCount} photos</span>
@@ -75,7 +76,7 @@ export function LifeGallery({ items, categories }: { items: readonly LifeItem[];
                 </p>
                 <h3 className="text-title font-bold">{item.title}</h3>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       ) : (

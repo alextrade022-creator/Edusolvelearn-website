@@ -28,7 +28,7 @@ export default function HowItWorksPage() {
         <ButtonLink href="/contact/">Book a free demo class</ButtonLink>
       </PageHero>
 
-      <Section>
+      <Section spaced="tight">
         <div className="max-w-[62rem]">
           <StepsTimeline steps={HIW_STEPS} vertical />
         </div>

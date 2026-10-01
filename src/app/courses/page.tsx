@@ -28,7 +28,7 @@ export default function CoursesPage() {
       </PageHero>
 
       {/* One editorial block per curriculum; ids match the home page links (#cbse …). */}
-      <Section className="flex flex-col">
+      <Section spaced="tight" className="flex flex-col">
         <ol className="border-t border-line">
           {CURRICULA.map((curriculum, index) => (
             <li key={curriculum.id} id={curriculum.id} className="scroll-mt-24 border-b border-line py-10 md:py-14">

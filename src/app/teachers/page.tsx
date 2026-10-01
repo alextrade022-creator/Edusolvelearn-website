@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { StepsTimeline } from '@/components/home/StepsTimeline';
 import { TutorApprovalCard } from '@/components/home/TutorApprovalCard';
 import { CheckIcon } from '@/components/icons';
+import { Reveal } from '@/components/motion/Reveal';
 import { ButtonLink } from '@/components/ui/Button';
 import { CtaSection } from '@/components/ui/CtaSection';
 import { PageHero } from '@/components/ui/PageHero';
@@ -27,7 +28,7 @@ export default function TeachersPage() {
         intro="We don’t show a catalogue of faces. Instead, every tutor passes the same careful selection — so whoever is matched with your child meets the same high bar."
       />
 
-      <Section className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
+      <Section spaced="tight" className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
         <div className="flex flex-col gap-10 lg:col-span-6">
           <SectionHeading eyebrow="Our selection process" title="Four stages before the first class" />
           <StepsTimeline steps={TUTOR_SELECTION_STAGES} vertical />
@@ -40,18 +41,19 @@ export default function TeachersPage() {
       <Section className="flex flex-col gap-10 lg:gap-12">
         <SectionHeading eyebrow="What we look for" title="Qualities every EduSolve tutor shares" />
         <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
-          {TUTOR_QUALITIES.map((quality) => (
-            <li key={quality.strong} className="flex flex-col gap-3 rounded-card border border-line bg-white p-6 md:p-7">
+          {TUTOR_QUALITIES.map((quality, index) => (
+            <Reveal as="li" key={quality.strong} delay={index * 0.08} className="flex flex-col gap-3 rounded-card border border-line bg-white p-6 md:p-7">
               <CheckIcon size={22} className="text-green" />
               <p className="text-title font-bold">{quality.strong}</p>
               <p className="leading-relaxed text-body">{quality.rest.replace(/^—\s*/, '').replace(/^./, (c) => c.toUpperCase())}</p>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </Section>
 
-      <Section>
-        <div className="flex flex-col gap-6 rounded-panel bg-ink px-6 py-10 text-white md:flex-row md:items-center md:justify-between md:px-14 md:py-14">
+      {/* Top spacing matches the CTA section's below, so the card sits evenly between. */}
+      <Section spaced={false} className="pt-16 md:pt-24 xl:pt-[7.5rem]">
+        <Reveal className="flex flex-col gap-6 rounded-panel bg-ink px-6 py-10 text-white md:flex-row md:items-center md:justify-between md:px-14 md:py-14">
           <div className="flex flex-col gap-3">
             <p className="text-[0.8125rem] font-bold tracking-[0.08em] text-footer-text uppercase">Teach with us</p>
             <h2 className="max-w-xl font-serif text-h3 font-medium">Love teaching one child at a time?</h2>
@@ -60,7 +62,7 @@ export default function TeachersPage() {
           <ButtonLink href="/teach/" variant="primary" withArrow className="self-start md:self-auto">
             Apply to teach
           </ButtonLink>
-        </div>
+        </Reveal>
       </Section>
 
       <CtaSection />
