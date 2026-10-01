@@ -15,7 +15,7 @@ export function StatsBand() {
                 'flex flex-col-reverse items-center gap-2 px-3 py-6 text-center md:py-0',
                 index % 2 === 1 && 'border-l border-line',
                 index < 2 && 'border-b border-line md:border-b-0',
-                index === 2 && 'md:border-l',
+                index === 2 && 'md:border-l md:border-line',
               )}
             >
               <dt className="text-sm text-muted md:text-[0.9375rem]">{stat.label}</dt>

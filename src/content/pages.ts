@@ -1,6 +1,6 @@
 // Content for the inner pages: How it works, About, Our tutors and Stories.
 
-import type { FeaturedQuote, Step } from './home';
+import { TESTIMONIAL_VIDEO_IDS, type FeaturedQuote, type Step } from './home';
 
 export interface DetailedStep extends Step {
   time: string;
@@ -45,7 +45,7 @@ export interface Person {
 
 export const ABOUT_FOUNDERS: readonly Person[] = [
   { name: 'Munavar Ali', role: 'Founder & CEO', bio: 'Leads EduSolve’s vision and teaching standards, driven by a belief that every child deserves personal attention.', photo: '/images/founder-munavar-ali.jpg' },
-  { name: 'Muhammed Jifri', role: 'Co-founder & CCO', bio: 'Heads growth and family relationships, making sure every parent’s experience with EduSolve feels warm and effortless.', photo: null },
+  { name: 'Muhammed Jifri', role: 'Founder & CCO', bio: 'Heads growth and family relationships, making sure every parent’s experience with EduSolve feels warm and effortless.', photo: null },
 ];
 
 export const TUTOR_SELECTION_STAGES: readonly Step[] = [
@@ -56,6 +56,10 @@ export const TUTOR_SELECTION_STAGES: readonly Step[] = [
 ];
 
 // Confirmed by the client (carried over from the previous site).
+// Video stories on the Stories page (the home page shows the first five).
+// PLACEHOLDER: the five home videos repeated until ten unique links arrive.
+export const STORIES_PAGE_VIDEO_IDS: readonly string[] = [...TESTIMONIAL_VIDEO_IDS, ...TESTIMONIAL_VIDEO_IDS];
+
 export const TESTIMONIAL_STATS: readonly { value: string; label: string }[] = [
   { value: '4.9/5', label: 'Average parent rating' },
   { value: '1000+', label: 'Expert tutors' },

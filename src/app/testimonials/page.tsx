@@ -4,9 +4,8 @@ import { CtaSection } from '@/components/ui/CtaSection';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { YouTubeFacade } from '@/components/ui/YouTubeFacade';
-import { TESTIMONIAL_VIDEO_IDS } from '@/content/home';
-import { TESTIMONIAL_QUOTES, TESTIMONIAL_STATS } from '@/content/pages';
+import { VideoCarousel } from '@/components/ui/VideoCarousel';
+import { STORIES_PAGE_VIDEO_IDS, TESTIMONIAL_QUOTES, TESTIMONIAL_STATS } from '@/content/pages';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = pageMetadata({
@@ -26,12 +25,13 @@ export default function TestimonialsPage() {
         intro="Parents and students across the Gulf on what one-on-one tuition changed for them."
       />
 
-      <Section>
+      {/* Tight spacing above and below the stats (30% less than between other sections). */}
+      <Section spaced="tight">
         <dl className="grid grid-cols-2 border-y border-line md:grid-cols-4 md:py-10">
           {TESTIMONIAL_STATS.map((stat, index) => (
             <div
               key={stat.label}
-              className={`flex flex-col-reverse items-center gap-2 px-3 py-6 text-center md:py-0 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line md:border-b-0' : ''} ${index === 2 ? 'md:border-l' : ''}`}
+              className={`flex flex-col-reverse items-center gap-2 px-3 py-6 text-center md:py-0 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line md:border-b-0' : ''} ${index === 2 ? 'md:border-l md:border-line' : ''}`}
             >
               <dt className="text-sm text-muted">{stat.label}</dt>
               <dd className="font-serif text-[2.25rem] leading-none font-medium tracking-[-0.03em] md:text-[3rem]">{stat.value}</dd>
@@ -41,35 +41,26 @@ export default function TestimonialsPage() {
       </Section>
 
       {featured ? (
-        <Section>
-          <Reveal>
-            <figure className="flex max-w-[56rem] flex-col gap-7">
-              <blockquote className="font-serif text-[1.625rem] leading-[1.3] tracking-[-0.01em] md:text-[2.5rem] md:leading-[1.25]">
-                “{featured.text}”
-              </blockquote>
-              <figcaption className="flex items-center gap-3.5">
-                <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-panel font-bold text-body">
-                  {featured.initial}
-                </span>
-                <span className="flex flex-col">
-                  <span className="font-bold">{featured.name}</span>
-                  <span className="text-sm text-muted">{featured.meta}</span>
-                </span>
-              </figcaption>
-            </figure>
-          </Reveal>
+        <Section spaced="tight">
+          <figure className="flex max-w-[56rem] flex-col gap-7">
+            <blockquote className="font-serif text-[1.625rem] leading-[1.3] tracking-[-0.01em] md:text-[2.5rem] md:leading-[1.25]">
+              “{featured.text}”
+            </blockquote>
+            <figcaption className="flex items-center gap-3.5">
+              <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-panel font-bold text-body">
+                {featured.initial}
+              </span>
+              <span className="flex flex-col">
+                <span className="font-bold">{featured.name}</span>
+                <span className="text-sm text-muted">{featured.meta}</span>
+              </span>
+            </figcaption>
+          </figure>
         </Section>
       ) : null}
 
-      <Section className="flex flex-col gap-10 lg:gap-12">
-        <SectionHeading eyebrow="Video stories" title="Hear it from our students" />
-        <ul className="grid grid-cols-2 gap-3.5 md:grid-cols-3 lg:grid-cols-5 lg:gap-5">
-          {TESTIMONIAL_VIDEO_IDS.map((id, index) => (
-            <li key={id}>
-              <YouTubeFacade id={id} title={`EduSolve student story ${index + 1}`} className="aspect-[9/14] rounded-2xl" />
-            </li>
-          ))}
-        </ul>
+      <Section>
+        <VideoCarousel ids={STORIES_PAGE_VIDEO_IDS} heading={<SectionHeading eyebrow="Video stories" title="Hear it from our students" />} />
       </Section>
 
       <Section className="flex flex-col gap-10 lg:gap-12">
