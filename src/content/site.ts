@@ -30,17 +30,28 @@ export const NAV_LINKS: readonly NavLink[] = [
   { label: 'About', href: '/about/' },
 ];
 
-export const FOOTER_EXPLORE: readonly NavLink[] = [
-  { label: 'Courses', href: '/courses/' },
-  { label: 'How it works', href: '/how-it-works/' },
-  { label: 'Our tutors', href: '/teachers/' },
-  { label: 'Stories', href: '/testimonials/' },
-  { label: 'Life at EduSolve', href: '/life-at-edusolve/' },
-  { label: 'Blog', href: '/blog/' },
-  { label: 'About', href: '/about/' },
-  { label: 'FAQ', href: '/faq/' },
-  { label: 'Contact', href: '/contact/' },
-  { label: 'Teach with us', href: '/teach/' },
+// Footer link columns, kept to 5 links each so the columns stay even.
+export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] }[] = [
+  {
+    title: 'Explore',
+    links: [
+      { label: 'Courses', href: '/courses/' },
+      { label: 'How it works', href: '/how-it-works/' },
+      { label: 'Our tutors', href: '/teachers/' },
+      { label: 'Stories', href: '/testimonials/' },
+      { label: 'FAQ', href: '/faq/' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about/' },
+      { label: 'Life at EduSolve', href: '/life-at-edusolve/' },
+      { label: 'Blog', href: '/blog/' },
+      { label: 'Teach with us', href: '/teach/' },
+      { label: 'Contact', href: '/contact/' },
+    ],
+  },
 ];
 
 export const LEGAL_LINKS: readonly NavLink[] = [

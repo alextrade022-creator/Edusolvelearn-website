@@ -1,8 +1,8 @@
 import Image from 'next-image-export-optimizer';
 import Link from 'next/link';
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { FacebookIcon, InstagramIcon, LinkedInIcon, WhatsAppIcon } from '@/components/icons';
-import { CONTACT, COUNTRIES_SERVED, FOOTER_EXPLORE, FOOTER_TAGLINE, LEGAL_LINKS, SOCIAL_LINKS, type SocialLink } from '@/content/site';
+import { CONTACT, COUNTRIES_SERVED, FOOTER_GROUPS, FOOTER_TAGLINE, LEGAL_LINKS, SOCIAL_LINKS, type SocialLink } from '@/content/site';
 
 const SOCIAL_ICONS: Record<SocialLink['icon'], ComponentType<{ size?: number }>> = {
   linkedin: LinkedInIcon,
@@ -14,18 +14,28 @@ const SOCIAL_ICONS: Record<SocialLink['icon'], ComponentType<{ size?: number }>>
 // Rendered at build time, so the year is the year of the latest deploy.
 const YEAR = new Date().getFullYear();
 
-const headingClass = 'text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-white';
-const linkClass = 'text-footer-text transition-colors hover:text-white';
+const linkClass = 'inline-block py-1 text-footer-text transition-colors hover:text-white';
 
+function Column({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-[0.8125rem] font-bold tracking-[0.08em] text-white uppercase">{title}</h2>
+      <ul className="flex flex-col gap-2 text-[0.9375rem]">{children}</ul>
+    </div>
+  );
+}
+
+// Brand block on the left; four equal columns (5–6 short items each) on the
+// right, so they end at roughly the same height. Phones: 2×2 grid.
 export function Footer() {
   return (
     <footer className="bg-footer text-footer-text">
-      <div className="container-site grid gap-12 pt-14 pb-10 md:grid-cols-12 md:gap-6 md:pt-[4.5rem]">
-        <div className="flex flex-col gap-5 md:col-span-12 lg:col-span-4">
+      <div className="container-site grid gap-12 pt-16 pb-12 md:pt-20 lg:grid-cols-12 lg:gap-6 lg:pt-24">
+        <div className="flex flex-col gap-6 lg:col-span-4">
           <Link href="/" aria-label="EduSolve home" className="self-start rounded-xl bg-white px-3.5 py-2.5">
             <Image src="/images/edusolve-logo.png" alt="EduSolve" width={66} height={36} sizes="66px" placeholder="empty" className="h-9 w-auto" />
           </Link>
-          <p className="max-w-xs text-[0.9375rem] leading-relaxed">{FOOTER_TAGLINE}</p>
+          <p className="max-w-[20rem] text-[0.9375rem] leading-relaxed">{FOOTER_TAGLINE}</p>
           <ul className="flex gap-2.5" aria-label="Social media">
             {SOCIAL_LINKS.map(({ label, href, icon }) => {
               const Icon = SOCIAL_ICONS[icon];
@@ -46,35 +56,46 @@ export function Footer() {
           </ul>
         </div>
 
-        <nav aria-label="Footer" className="flex flex-col gap-3.5 text-[0.9375rem] md:col-span-4 lg:col-span-3 lg:col-start-6">
-          <h2 className={headingClass}>Explore</h2>
-          <ul className="grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-1">
-            {FOOTER_EXPLORE.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className={linkClass}>
-                  {link.label}
-                </Link>
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 lg:col-span-8">
+          {FOOTER_GROUPS.map((group) => (
+            <Column key={group.title} title={group.title}>
+              {group.links.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={linkClass}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </Column>
+          ))}
+
+          <Column title="Get in touch">
+            <li>
+              <a href={CONTACT.phoneHref} className={linkClass}>
+                {CONTACT.phone}
+              </a>
+            </li>
+            <li>
+              <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                WhatsApp us
+              </a>
+            </li>
+            <li>
+              <a href={CONTACT.emailHref} className={`${linkClass} break-all`}>
+                {CONTACT.email}
+              </a>
+            </li>
+            <li className="py-1">{CONTACT.location}</li>
+          </Column>
+
+          <Column title="We serve">
+            {COUNTRIES_SERVED.map((country) => (
+              <li key={country} className="py-1">
+                {country}
               </li>
             ))}
-          </ul>
+          </Column>
         </nav>
-
-        <div className="flex flex-col gap-3.5 text-[0.9375rem] md:col-span-4 lg:col-span-2">
-          <h2 className={headingClass}>Get in touch</h2>
-          <a href={CONTACT.phoneHref} className={linkClass}>{CONTACT.phone}</a>
-          <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>WhatsApp us</a>
-          <a href={CONTACT.emailHref} className={linkClass}>{CONTACT.email}</a>
-          <p>{CONTACT.location}</p>
-        </div>
-
-        <div className="flex flex-col gap-3.5 text-[0.9375rem] md:col-span-4 lg:col-span-2">
-          <h2 className={headingClass}>We serve</h2>
-          <ul className="flex flex-col gap-3">
-            {COUNTRIES_SERVED.map((country) => (
-              <li key={country}>{country}</li>
-            ))}
-          </ul>
-        </div>
       </div>
 
       <div className="container-site">
