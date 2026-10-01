@@ -102,11 +102,11 @@ export default function AboutPage() {
                       alt={`${person.name}, ${person.role}`}
                       fill
                       sizes="(min-width: 768px) 560px, 100vw"
-                      className="object-cover object-top"
+                      className="object-cover object-bottom"
                     />
                   </ZoomIn>
                 ) : (
-                  <div className="flex h-full items-center justify-center" aria-hidden="true">
+                  <div className="flex h-full items-end justify-center pb-8" aria-hidden="true">
                     <span className="font-serif text-[5rem] font-medium text-[#85817a]">{initials(person.name)}</span>
                   </div>
                 )}
