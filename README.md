@@ -57,10 +57,11 @@ columns on smaller screens.
 
 - Tutor photos and the hero image use a styled placeholder component
   (`ImagePlaceholder`) — swap them for real `<img>` tags when assets are ready.
-- Demo bookings and teacher applications post directly to Web3Forms; no backend or database is
-  required. The Web3Forms access key lives in `src/config.js` (`WEB3FORMS_KEY`). It is a public
-  key by design — it only allows submissions to our inbox and ships in the browser bundle anyway —
-  so no environment variable is needed to build or deploy. `.env` is gitignored; never commit it.
+- Demo bookings and teacher applications are sent through EmailJS; no backend or database is
+  required. The EmailJS service ID, template IDs and Public Key live in `src/config.ts`. They are
+  public by design — they only trigger our own templates, whose recipients are fixed in the EmailJS
+  dashboard, and they ship in the browser bundle anyway — so no environment variable is needed to
+  build or deploy. Never add the EmailJS Private Key to the repository. `.env` is gitignored.
 - Legal pages (Privacy, Terms) carry the original placeholder text — have them reviewed by a legal
   professional before publishing.
 ```

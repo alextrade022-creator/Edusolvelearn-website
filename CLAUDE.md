@@ -33,7 +33,8 @@ Domain: https://edusolvelearn.com
   (`priority` is deprecated in Next 16).
 - Fonts via `next/font` (Fraunces 400/500 for headings, Manrope variable for body) in `src/app/fonts.ts`.
 - Internal links always `next/link`. Dates via `Intl.DateTimeFormat` (`src/lib/date.ts`) — no moment.
-- No third-party scripts. Web3Forms is a plain POST on submit (public key in `src/config.ts`).
+- No third-party scripts. Forms go through EmailJS with a plain POST on submit (public IDs in
+  `src/config.ts`; recipients are set per template in the EmailJS dashboard; never add the Private Key).
   YouTube uses a thumbnail facade (`YouTubeFacade`), loading `youtube-nocookie` only on click.
 - Motion (`motion/react`) is loaded via `LazyMotion strict` → use `m.*`, not `motion.*`.
   Never call React `setState` synchronously inside motion value events — defer to rAF.
@@ -57,8 +58,8 @@ Domain: https://edusolvelearn.com
 - Layout: `container-site` (1200px, gutters 20/40/120), `section-space` (88/112/144px),
   radius 16–24px, thin 1px borders, soft shadows only.
 - Motion: home page has signature effects (hero parallax, count-up stats, curricula expanding
-  panels, steps line-draw, Why-cards rows sliding in from opposite sides, tutor checks + stamped
-  seal, founder zoom, stories drift, app phones fanning out). Inner pages stay calm: CSS
+  panels, steps line-draw, Why EduSolve auto-playing tabs (progress line, pause button), tutor checks + stamped
+  seal, founder zoom, stories carousel, Life at EduSolve pinned three chapters, app phones fanning out). Inner pages stay calm: CSS
   scroll-driven `Reveal` fade-ins only.
 
 ## Where things live
@@ -72,7 +73,9 @@ Domain: https://edusolvelearn.com
   ≥3 posts are published. Categories/slugs are defined in `src/lib/posts.ts`.
 - `src/components/` — `ui/`, `layout/`, `home/`, `motion/`, `forms/`, `blog/`, `life/`, `seo/`.
 - Images in `public/`: `hero_section_image.png`, `why_edu_images/1–6.png`, `mobile_app_images/`,
-  `blog_images/`, `images/` (logo, founder photo). Replacing an image with the same name: clear
+  `blog_images/`, `images/` (logo, founder photo), `Life_at_Edusolve_Images/<category folder>/`
+  (Life at EduSolve photos; listed in `src/content/life.ts` with a `description` shown under the
+  enlarged photo — cards open `LifeLightbox`; web-safe file names only). Replacing an image with the same name: clear
   `public/<folder>/nextImageExportOptimizer` and its entries in
   `public/next-image-export-optimizer-hashes.json`, then rebuild.
 
@@ -80,7 +83,8 @@ Domain: https://edusolvelearn.com
 
 - Real tutor hiring process (the 5 checks in `src/content/home.ts` are placeholders).
 - Centres: details are live (`CENTRES` in `src/content/home.ts`, with structured data); timings not shown yet.
-- Life at EduSolve photos and captions; parental consent for student photos.
+- Life at EduSolve: photos are live; Trips & events has none yet; confirm parental consent for
+  student photos (achievement posters, classroom photos).
 - Blog: team review, then `draft: false`; CBSE post facts marked `[verify]`; IGCSE post needs a
   teacher read-through.
 - Official Google Play badge artwork; Privacy/Terms `[bracketed]` placeholders and dates.
