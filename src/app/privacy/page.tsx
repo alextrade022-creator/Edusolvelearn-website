@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       title="Privacy policy"
       intro="How we collect, use and protect your family’s information."
       sections={PRIVACY_SECTIONS}
-      updated="[Date]"
+      updated="2 October 2026"
     />
   );
 }

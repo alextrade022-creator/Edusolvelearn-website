@@ -16,7 +16,7 @@ export default function TermsPage() {
       title="Terms & conditions"
       intro="The terms that apply when you use our website and tuition services."
       sections={TERMS_SECTIONS}
-      updated="[Date]"
+      updated="2 October 2026"
     />
   );
 }

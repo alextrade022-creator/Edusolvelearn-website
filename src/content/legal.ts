@@ -10,7 +10,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
   {
     heading: '1. Introduction',
     body: [
-      'EduSolve ("we", "us", "our") provides online one-on-one tuition services to families, primarily those based in the Gulf region. This Privacy Policy explains how we collect, use, store and protect your personal information when you use our website and services.',
+      'EduSolve provides online one-on-one tuition services to families, primarily those based in the Gulf region. This Privacy Policy explains how we collect, use, store and protect your personal information when you use our website and services.',
       'By using our website or booking a class, you agree to the practices described in this policy.',
     ],
   },
