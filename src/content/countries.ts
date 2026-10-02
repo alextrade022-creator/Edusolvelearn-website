@@ -4,6 +4,10 @@
 export interface Country {
   name: string;
   dialCode: string;
+  /** Common abbreviation, shown in brackets in the picker and searchable (e.g. "UAE"). */
+  abbr?: string;
+  /** Other names people type; searchable but not shown (e.g. "America"). */
+  aliases?: readonly string[];
 }
 
 export const COUNTRIES: readonly Country[] = [
@@ -39,7 +43,7 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Cambodia', dialCode: '+855' },
   { name: 'Cameroon', dialCode: '+237' },
   { name: 'Canada', dialCode: '+1' },
-  { name: 'Central African Republic', dialCode: '+236' },
+  { name: 'Central African Republic', dialCode: '+236', abbr: 'CAR' },
   { name: 'Chad', dialCode: '+235' },
   { name: 'Chile', dialCode: '+56' },
   { name: 'China', dialCode: '+86' },
@@ -51,8 +55,8 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Croatia', dialCode: '+385' },
   { name: 'Cuba', dialCode: '+53' },
   { name: 'Cyprus', dialCode: '+357' },
-  { name: 'Czechia', dialCode: '+420' },
-  { name: 'Democratic Republic of the Congo', dialCode: '+243' },
+  { name: 'Czechia', dialCode: '+420', aliases: ['Czech Republic'] },
+  { name: 'Democratic Republic of the Congo', dialCode: '+243', abbr: 'DRC' },
   { name: 'Denmark', dialCode: '+45' },
   { name: 'Djibouti', dialCode: '+253' },
   { name: 'Dominica', dialCode: '+1-767' },
@@ -129,7 +133,7 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Nauru', dialCode: '+674' },
   { name: 'Nepal', dialCode: '+977' },
   { name: 'Netherlands', dialCode: '+31' },
-  { name: 'New Zealand', dialCode: '+64' },
+  { name: 'New Zealand', dialCode: '+64', abbr: 'NZ' },
   { name: 'Nicaragua', dialCode: '+505' },
   { name: 'Niger', dialCode: '+227' },
   { name: 'Nigeria', dialCode: '+234' },
@@ -141,7 +145,7 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Palau', dialCode: '+680' },
   { name: 'Palestine', dialCode: '+970' },
   { name: 'Panama', dialCode: '+507' },
-  { name: 'Papua New Guinea', dialCode: '+675' },
+  { name: 'Papua New Guinea', dialCode: '+675', abbr: 'PNG' },
   { name: 'Paraguay', dialCode: '+595' },
   { name: 'Peru', dialCode: '+51' },
   { name: 'Philippines', dialCode: '+63' },
@@ -157,7 +161,7 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Samoa', dialCode: '+685' },
   { name: 'San Marino', dialCode: '+378' },
   { name: 'São Tomé and Príncipe', dialCode: '+239' },
-  { name: 'Saudi Arabia', dialCode: '+966' },
+  { name: 'Saudi Arabia', dialCode: '+966', abbr: 'KSA' },
   { name: 'Senegal', dialCode: '+221' },
   { name: 'Serbia', dialCode: '+381' },
   { name: 'Seychelles', dialCode: '+248' },
@@ -190,9 +194,9 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Tuvalu', dialCode: '+688' },
   { name: 'Uganda', dialCode: '+256' },
   { name: 'Ukraine', dialCode: '+380' },
-  { name: 'United Arab Emirates', dialCode: '+971' },
-  { name: 'United Kingdom', dialCode: '+44' },
-  { name: 'United States', dialCode: '+1' },
+  { name: 'United Arab Emirates', dialCode: '+971', abbr: 'UAE', aliases: ['Emirates', 'Dubai', 'Abu Dhabi'] },
+  { name: 'United Kingdom', dialCode: '+44', abbr: 'UK', aliases: ['Britain', 'Great Britain', 'GB', 'England'] },
+  { name: 'United States', dialCode: '+1', abbr: 'USA', aliases: ['US', 'America'] },
   { name: 'Uruguay', dialCode: '+598' },
   { name: 'Uzbekistan', dialCode: '+998' },
   { name: 'Vanuatu', dialCode: '+678' },
@@ -203,6 +207,29 @@ export const COUNTRIES: readonly Country[] = [
   { name: 'Zambia', dialCode: '+260' },
   { name: 'Zimbabwe', dialCode: '+263' },
 ];
+
+/** Name as shown in the picker: "United Arab Emirates (UAE)". */
+export const countryLabel = (country: Country): string => (country.abbr ? `${country.name} (${country.abbr})` : country.name);
+
+// Search by name, abbreviation or alias. Abbreviation/alias matches come first
+// (so "UK" finds United Kingdom before Ukraine), then names starting with the
+// text, then names containing it.
+export function searchCountries(query: string): readonly Country[] {
+  const text = query.trim().toLowerCase();
+  if (!text) return COUNTRIES;
+  const rank = (country: Country): number => {
+    const keys = [country.abbr, ...(country.aliases ?? [])].filter((key): key is string => Boolean(key)).map((key) => key.toLowerCase());
+    if (keys.some((key) => key.startsWith(text))) return 0;
+    const name = country.name.toLowerCase();
+    if (name.startsWith(text)) return 1;
+    if (name.includes(text)) return 2;
+    return keys.some((key) => key.includes(text)) ? 3 : -1;
+  };
+  return COUNTRIES.map((country) => ({ country, score: rank(country) }))
+    .filter((entry) => entry.score >= 0)
+    .sort((a, b) => a.score - b.score)
+    .map((entry) => entry.country);
+}
 
 export const dialCodeFor = (country: string): string =>
   COUNTRIES.find((item) => item.name === country)?.dialCode ?? '';

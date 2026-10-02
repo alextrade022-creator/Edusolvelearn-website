@@ -2,19 +2,25 @@
 
 import { CURRICULUM_OPTIONS, GRADE_OPTIONS, TIME_OPTIONS } from '@/content/forms';
 import { dialCodeFor } from '@/content/countries';
-import { minLengthError, nameError, requiredError, submitToWeb3Forms } from '@/lib/forms';
+import { minLengthError, nameError, requiredError, sendForm } from '@/lib/forms';
 import { CountryPicker } from './CountryPicker';
-import { Field, FormCard, FormSuccess, SubmitButton, inputClass } from './fields';
+import { Field, FormCard, FormSuccess, inputClass, SegmentedChoice, Select, SubmitButton } from './fields';
 import { useFormState } from './useFormState';
 
-type Key = 'name' | 'country' | 'phone' | 'grade' | 'curriculum' | 'subject' | 'time' | 'notes';
+type Key = 'bookingAs' | 'name' | 'country' | 'phone' | 'grade' | 'curriculum' | 'subject' | 'time';
 
-const INITIAL: Record<Key, string> = { name: '', country: '', phone: '', grade: '', curriculum: '', subject: '', time: '', notes: '' };
+// Who is filling in the form. Most visitors are parents, so that's preselected.
+const BOOKING_AS = [
+  { value: 'Parent', label: 'A parent' },
+  { value: 'Student', label: 'A student' },
+] as const;
 
-// Free demo class booking. Sent to Web3Forms only on submit.
+const INITIAL: Record<Key, string> = { bookingAs: 'Parent', name: '', country: '', phone: '', grade: '', curriculum: '', subject: '', time: '' };
+
+// Free demo class booking. Sent through EmailJS only on submit.
 export function DemoForm() {
   const form = useFormState<Key>(INITIAL, {
-    name: (v) => nameError(v, 'Parent / student name'),
+    name: (v) => nameError(v, 'Name'),
     country: (v) => requiredError(v, 'Country'),
     phone: (v) => (v.trim().length < 6 ? (v.trim() ? 'Enter a valid WhatsApp number.' : 'WhatsApp number is required.') : ''),
     grade: (v) => requiredError(v, 'Class / grade'),
@@ -22,11 +28,13 @@ export function DemoForm() {
     subject: (v) => minLengthError(v, 'Subjects needed'),
   });
 
+  const isStudent = form.values.bookingAs === 'Student';
+
   if (form.submitted) {
     return (
       <FormCard>
         <FormSuccess title="Demo request received!">
-          Thank you. Our team will message you on WhatsApp shortly to arrange your child’s free one-on-one demo class.
+          Thank you. Our team will message you on WhatsApp shortly to arrange {isStudent ? 'your' : 'your child’s'} free one-on-one demo class.
         </FormSuccess>
       </FormCard>
     );
@@ -40,9 +48,10 @@ export function DemoForm() {
       <form
         noValidate
         onSubmit={form.handleSubmit((values) =>
-          submitToWeb3Forms(
+          sendForm(
+            'demoBooking',
             {
-              form_type: 'Free demo class booking',
+              booked_by: values.bookingAs,
               parent_student_name: values.name.trim(),
               whatsapp_number: `${code} ${values.phone}`.trim(),
               country: values.country,
@@ -50,7 +59,6 @@ export function DemoForm() {
               curriculum: values.curriculum,
               subjects: values.subject.trim(),
               preferred_time: values.time || 'No preference',
-              notes: values.notes.trim(),
             },
             'New Free Demo Booking — EduSolve',
           ),
@@ -59,13 +67,21 @@ export function DemoForm() {
       >
         <h2 className="font-serif text-[1.625rem] font-medium md:text-[1.875rem]">Book your free demo class</h2>
 
-        <Field label="Parent / student name *" htmlFor="name" error={form.errorFor('name')}>
+        <SegmentedChoice
+          legend="I’m booking as"
+          name="bookingAs"
+          options={BOOKING_AS}
+          value={isStudent ? 'Student' : 'Parent'}
+          onChange={(value) => form.setValue('bookingAs', value)}
+        />
+
+        <Field label="Your name *" htmlFor="name" error={form.errorFor('name')}>
           <input id="name" autoComplete="name" className={inputClass} value={form.values.name} onChange={(e) => form.setValue('name', e.target.value)} onBlur={() => form.touch('name')} aria-invalid={Boolean(form.errorFor('name'))} aria-describedby={describe('name')} placeholder="Your full name" />
         </Field>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Country *" htmlFor="country" error={form.errorFor('country')}>
-            <CountryPicker id="country" value={form.values.country} onChange={(country) => form.setValue('country', country)} invalid={Boolean(form.errorFor('country'))} describedBy={describe('country')} />
+            <CountryPicker id="country" value={form.values.country} onChange={(country) => form.setValue('country', country)} onBlur={() => form.touch('country')} invalid={Boolean(form.errorFor('country'))} describedBy={describe('country')} />
           </Field>
           <Field label="WhatsApp number *" htmlFor="phone" error={form.errorFor('phone')}>
             <div className="flex overflow-hidden rounded-xl border-[1.5px] border-line bg-white focus-within:border-ink has-[[aria-invalid=true]]:border-red">
@@ -77,20 +93,20 @@ export function DemoForm() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Class / grade *" htmlFor="grade" error={form.errorFor('grade')}>
-            <select id="grade" className={inputClass} value={form.values.grade} onChange={(e) => form.setValue('grade', e.target.value)} onBlur={() => form.touch('grade')} aria-invalid={Boolean(form.errorFor('grade'))} aria-describedby={describe('grade')}>
+            <Select id="grade" value={form.values.grade} onChange={(e) => form.setValue('grade', e.target.value)} onBlur={() => form.touch('grade')} aria-invalid={Boolean(form.errorFor('grade'))} aria-describedby={describe('grade')}>
               <option value="">Select grade</option>
               {GRADE_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
-            </select>
+            </Select>
           </Field>
           <Field label="Curriculum *" htmlFor="curriculum" error={form.errorFor('curriculum')}>
-            <select id="curriculum" className={inputClass} value={form.values.curriculum} onChange={(e) => form.setValue('curriculum', e.target.value)} onBlur={() => form.touch('curriculum')} aria-invalid={Boolean(form.errorFor('curriculum'))} aria-describedby={describe('curriculum')}>
+            <Select id="curriculum" value={form.values.curriculum} onChange={(e) => form.setValue('curriculum', e.target.value)} onBlur={() => form.touch('curriculum')} aria-invalid={Boolean(form.errorFor('curriculum'))} aria-describedby={describe('curriculum')}>
               <option value="">Select curriculum</option>
               {CURRICULUM_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
-            </select>
+            </Select>
           </Field>
         </div>
 
@@ -99,18 +115,14 @@ export function DemoForm() {
             <input id="subject" className={inputClass} value={form.values.subject} onChange={(e) => form.setValue('subject', e.target.value)} onBlur={() => form.touch('subject')} aria-invalid={Boolean(form.errorFor('subject'))} aria-describedby={describe('subject')} placeholder="e.g. Maths, Physics" />
           </Field>
           <Field label="Preferred time" htmlFor="time">
-            <select id="time" className={inputClass} value={form.values.time} onChange={(e) => form.setValue('time', e.target.value)}>
+            <Select id="time" value={form.values.time} onChange={(e) => form.setValue('time', e.target.value)}>
               <option value="">Select preferred time</option>
               {TIME_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
-            </select>
+            </Select>
           </Field>
         </div>
-
-        <Field label="Anything else we should know?" htmlFor="notes">
-          <textarea id="notes" rows={3} className={`${inputClass} resize-y`} value={form.values.notes} onChange={(e) => form.setValue('notes', e.target.value)} placeholder="Your child’s goals or any specific needs" />
-        </Field>
 
         <SubmitButton sending={form.sending} sendingLabel="Sending your request…">
           Book my free demo class

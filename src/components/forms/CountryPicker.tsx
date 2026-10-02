@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDownIcon } from '@/components/icons';
-import { COUNTRIES, type Country } from '@/content/countries';
+import { COUNTRIES, countryLabel, searchCountries, type Country } from '@/content/countries';
 import { cn } from '@/lib/cn';
 import { inputClass } from './fields';
 
@@ -10,25 +10,35 @@ interface CountryPickerProps {
   id: string;
   value: string;
   onChange: (country: string) => void;
+  /** Called when the visitor leaves the picker (so the form can show "required"). */
+  onBlur?: () => void;
   invalid?: boolean;
   describedBy?: string;
 }
 
 // Searchable country list (kept local, no external service).
-export function CountryPicker({ id, value, onChange, invalid, describedBy }: CountryPickerProps) {
+export function CountryPicker({ id, value, onChange, onBlur, invalid, describedBy }: CountryPickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const container = useRef<HTMLDivElement>(null);
   const listId = useId();
-  const results = COUNTRIES.filter(({ name }) => name.toLowerCase().includes(query.trim().toLowerCase()));
+  const results = searchCountries(query);
+  const selected = COUNTRIES.find((country) => country.name === value);
 
+  // Closing without choosing counts as leaving the field. (Not a plain "focus
+  // left" check: in Safari, clicking an option looks like focus leaving, and the
+  // list would close before the click registered.)
   useEffect(() => {
     if (!open) return;
+    const leave = () => {
+      setOpen(false);
+      onBlur?.();
+    };
     const close = (event: MouseEvent) => {
-      if (event.target instanceof Node && !container.current?.contains(event.target)) setOpen(false);
+      if (event.target instanceof Node && !container.current?.contains(event.target)) leave();
     };
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') leave();
     };
     document.addEventListener('mousedown', close);
     document.addEventListener('keydown', onKey);
@@ -36,7 +46,7 @@ export function CountryPicker({ id, value, onChange, invalid, describedBy }: Cou
       document.removeEventListener('mousedown', close);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [open, onBlur]);
 
   const select = (country: Country) => {
     onChange(country.name);
@@ -45,7 +55,17 @@ export function CountryPicker({ id, value, onChange, invalid, describedBy }: Cou
   };
 
   return (
-    <div ref={container} className="relative">
+    <div
+      ref={container}
+      className="relative"
+      // Tabbing out of the picker (to another field) also leaves it.
+      onBlur={(event) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) {
+          setOpen(false);
+          onBlur?.();
+        }
+      }}
+    >
       <button
         id={id}
         type="button"
@@ -54,9 +74,13 @@ export function CountryPicker({ id, value, onChange, invalid, describedBy }: Cou
         aria-controls={listId}
         aria-describedby={describedBy}
         onClick={() => setOpen((current) => !current)}
+        // Focus leaving the closed field (list not open) counts too.
+        onBlur={() => {
+          if (!open) onBlur?.();
+        }}
         className={cn(inputClass, 'flex items-center justify-between text-left', invalid && 'border-red')}
       >
-        <span className={value ? '' : 'text-[#72777c]'}>{value || 'Select country'}</span>
+        <span className={value ? '' : 'text-[#72777c]'}>{selected ? countryLabel(selected) : value || 'Select country'}</span>
         <ChevronDownIcon size={18} className="ml-3 shrink-0 text-muted" />
       </button>
       {open ? (
@@ -69,7 +93,11 @@ export function CountryPicker({ id, value, onChange, invalid, describedBy }: Cou
               results.map((country) => (
                 <li key={country.name} role="option" aria-selected={value === country.name}>
                   <button type="button" onClick={() => select(country)} className="flex w-full justify-between gap-3 px-4 py-2.5 text-left text-[0.9375rem] hover:bg-panel">
-                    {country.name} <span className="text-muted">{country.dialCode}</span>
+                    <span>
+                      {country.name}
+                      {country.abbr ? <span className="text-muted"> ({country.abbr})</span> : null}
+                    </span>
+                    <span className="text-muted">{country.dialCode}</span>
                   </button>
                 </li>
               ))

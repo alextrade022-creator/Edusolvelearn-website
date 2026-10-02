@@ -2,16 +2,16 @@
 
 import { dialCodeFor } from '@/content/countries';
 import { ENGLISH_PROFICIENCY_OPTIONS } from '@/content/forms';
-import { minLengthError, nameError, requiredError, submitToWeb3Forms } from '@/lib/forms';
+import { minLengthError, nameError, requiredError, sendForm } from '@/lib/forms';
 import { CountryPicker } from './CountryPicker';
-import { Field, FormCard, FormSuccess, SubmitButton, inputClass } from './fields';
+import { Field, FormCard, FormSuccess, inputClass, Select, SubmitButton } from './fields';
 import { useFormState } from './useFormState';
 
 type Key = 'name' | 'country' | 'phone' | 'subjects' | 'englishProficiency' | 'qualification';
 
 const INITIAL: Record<Key, string> = { name: '', country: '', phone: '', subjects: '', englishProficiency: '', qualification: '' };
 
-// Tutor application. Sent to Web3Forms only on submit.
+// Tutor application. Sent through EmailJS only on submit.
 export function TeachForm() {
   const form = useFormState<Key>(INITIAL, {
     name: (v) => nameError(v),
@@ -40,9 +40,9 @@ export function TeachForm() {
       <form
         noValidate
         onSubmit={form.handleSubmit((values) =>
-          submitToWeb3Forms(
+          sendForm(
+            'teacherApplication',
             {
-              form_type: 'Teacher application',
               teacher_name: values.name.trim(),
               phone_number: `${code} ${values.phone}`.trim(),
               country: values.country,
@@ -63,7 +63,7 @@ export function TeachForm() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Country *" htmlFor="country" error={form.errorFor('country')}>
-            <CountryPicker id="country" value={form.values.country} onChange={(country) => form.setValue('country', country)} invalid={Boolean(form.errorFor('country'))} describedBy={describe('country')} />
+            <CountryPicker id="country" value={form.values.country} onChange={(country) => form.setValue('country', country)} onBlur={() => form.touch('country')} invalid={Boolean(form.errorFor('country'))} describedBy={describe('country')} />
           </Field>
           <Field label="Phone number *" htmlFor="phone" error={form.errorFor('phone')}>
             <div className="flex overflow-hidden rounded-xl border-[1.5px] border-line bg-white focus-within:border-ink has-[[aria-invalid=true]]:border-red">
@@ -79,12 +79,12 @@ export function TeachForm() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="English proficiency *" htmlFor="englishProficiency" error={form.errorFor('englishProficiency')}>
-            <select id="englishProficiency" className={inputClass} value={form.values.englishProficiency} onChange={(e) => form.setValue('englishProficiency', e.target.value)} onBlur={() => form.touch('englishProficiency')} aria-invalid={Boolean(form.errorFor('englishProficiency'))} aria-describedby={describe('englishProficiency')}>
+            <Select id="englishProficiency" value={form.values.englishProficiency} onChange={(e) => form.setValue('englishProficiency', e.target.value)} onBlur={() => form.touch('englishProficiency')} aria-invalid={Boolean(form.errorFor('englishProficiency'))} aria-describedby={describe('englishProficiency')}>
               <option value="">Select proficiency</option>
               {ENGLISH_PROFICIENCY_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
-            </select>
+            </Select>
           </Field>
           <Field label="Qualification *" htmlFor="qualification" error={form.errorFor('qualification')}>
             <input id="qualification" className={inputClass} value={form.values.qualification} onChange={(e) => form.setValue('qualification', e.target.value)} onBlur={() => form.touch('qualification')} aria-invalid={Boolean(form.errorFor('qualification'))} aria-describedby={describe('qualification')} placeholder="e.g. B.Ed., M.Sc. Mathematics" />

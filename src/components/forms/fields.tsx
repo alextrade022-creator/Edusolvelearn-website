@@ -1,9 +1,28 @@
-import type { ReactNode } from 'react';
-import { CheckIcon } from '@/components/icons';
+import type { ComponentProps, ReactNode } from 'react';
+import { CheckIcon, ChevronDownIcon } from '@/components/icons';
 import { cn } from '@/lib/cn';
 
 export const inputClass =
   'w-full rounded-xl border-[1.5px] border-line bg-white px-4 py-3.5 text-base text-ink outline-none transition-colors placeholder:text-[#72777c] focus:border-ink aria-[invalid=true]:border-red';
+
+// A dropdown that matches the other fields: same padding, the site's thin
+// chevron (as on the country picker) instead of the browser's arrow, and grey
+// "Select …" text until a real option is chosen.
+export function Select({ className, value, children, ...props }: ComponentProps<'select'>) {
+  return (
+    <div className="relative">
+      <select
+        {...props}
+        value={value}
+        data-empty={value === '' ? 'true' : undefined}
+        className={cn(inputClass, 'appearance-none pr-11 data-[empty=true]:text-[#72777c] [&>option]:text-ink', className)}
+      >
+        {children}
+      </select>
+      <ChevronDownIcon size={18} className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-muted" />
+    </div>
+  );
+}
 
 export function Field({ label, htmlFor, error, children, hint }: { label: string; htmlFor: string; error?: string; hint?: string; children: ReactNode }) {
   return (
@@ -19,6 +38,49 @@ export function Field({ label, htmlFor, error, children, hint }: { label: string
         </p>
       ) : null}
     </div>
+  );
+}
+
+// A choice between a few short options, shown side by side in one rounded box
+// the same height as the text fields: a soft beige track, with the chosen
+// option as a raised white pill (quiet, so it never competes with the submit
+// button). Built on native radio buttons, so arrow keys and screen readers
+// work as expected.
+export function SegmentedChoice<T extends string>({
+  legend,
+  name,
+  options,
+  value,
+  onChange,
+}: {
+  legend: string;
+  name: string;
+  options: readonly { value: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <fieldset className="flex flex-col gap-2">
+      <legend className="mb-2 text-sm font-semibold text-ink">{legend}</legend>
+      <div className="grid auto-cols-fr grid-flow-col gap-1 rounded-xl border-[1.5px] border-line bg-panel p-1">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className="flex min-h-11 cursor-pointer items-center justify-center rounded-lg px-3 text-[0.9375rem] font-semibold text-muted transition-[color,background-color,box-shadow] duration-200 hover:text-ink has-[:checked]:bg-white has-[:checked]:text-ink has-[:checked]:shadow-[0_1px_2px_rgba(22,24,26,0.08),0_0_0_1px_rgba(22,24,26,0.04)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink"
+          >
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
+              className="sr-only"
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 

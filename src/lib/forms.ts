@@ -1,7 +1,7 @@
-// Shared form validation and Web3Forms submission. Web3Forms is a plain POST
-// made only when a form is submitted; no third-party script is loaded.
+// Shared form validation and EmailJS submission. EmailJS is called with a plain
+// POST only when a form is submitted; no third-party script or SDK is loaded.
 
-import { WEB3FORMS_ENDPOINT, WEB3FORMS_KEY } from '@/config';
+import { EMAILJS_ENDPOINT, EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATES } from '@/config';
 
 export const nameError = (value: string, label = 'Name'): string => {
   const name = value.trim();
@@ -21,23 +21,26 @@ export const minLengthError = (value: string, label: string, min = 3): string =>
   return '';
 };
 
-interface Web3FormsResponse {
-  success: boolean;
-  message?: string;
-}
+export type FormTemplate = keyof typeof EMAILJS_TEMPLATES;
 
-const isWeb3FormsResponse = (value: unknown): value is Web3FormsResponse =>
-  typeof value === 'object' && value !== null && 'success' in value;
-
-export async function submitToWeb3Forms(fields: Record<string, string>, subject: string): Promise<void> {
-  const response = await fetch(WEB3FORMS_ENDPOINT, {
+// Sends one form entry through EmailJS's REST API. The field names are the
+// {{variables}} used in that form's EmailJS template; `subject` fills the
+// template's Subject line. Where the email goes is decided in the EmailJS
+// dashboard (the template's "To Email"), not here.
+export async function sendForm(template: FormTemplate, fields: Record<string, string>, subject: string): Promise<void> {
+  const response = await fetch(EMAILJS_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ access_key: WEB3FORMS_KEY, from_name: 'EduSolve', subject, ...fields }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      service_id: EMAILJS_SERVICE_ID,
+      template_id: EMAILJS_TEMPLATES[template],
+      user_id: EMAILJS_PUBLIC_KEY,
+      template_params: { subject, ...fields },
+    }),
   });
-  const data: unknown = await response.json();
-  if (!isWeb3FormsResponse(data) || !data.success) {
-    const message = isWeb3FormsResponse(data) && data.message ? data.message : 'Unable to send your request.';
-    throw new Error(message);
+  // EmailJS answers 200 "OK" on success, and a plain-text reason otherwise.
+  if (!response.ok) {
+    console.error('Form delivery failed:', response.status, await response.text().catch(() => ''));
+    throw new Error('Unable to send your request. Please try again, or message us on WhatsApp.');
   }
 }
