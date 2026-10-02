@@ -19,7 +19,7 @@ export function PostCover({ title, category, cover, sizes, className, priority, 
   if (cover) {
     return (
       <div className={cn('relative overflow-hidden bg-panel', className)}>
-        <Image src={cover} alt="" fill sizes={sizes} preload={priority} fetchPriority={priority ? 'high' : undefined} loading={priority ? 'eager' : 'lazy'} className="object-cover object-[center_40%]" />
+        <Image src={cover} alt="" fill sizes={sizes} preload={priority} fetchPriority={priority ? 'high' : undefined} loading={priority ? 'eager' : 'lazy'} className="object-cover object-[center_40%] transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04] motion-reduce:transition-none" />
       </div>
     );
   }

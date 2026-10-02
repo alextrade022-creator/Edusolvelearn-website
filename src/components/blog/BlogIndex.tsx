@@ -43,8 +43,8 @@ export function BlogIndex({ posts, page, category }: BlogIndexProps) {
       />
       <Section spaced={false} className="flex flex-col gap-8 pt-12 md:pt-16 lg:gap-10">
         {chips.length ? (
-          <nav aria-label="Blog categories" className="-mx-5 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:px-0">
-            <ul className="flex gap-2 md:flex-wrap">
+          <nav aria-label="Blog categories">
+            <ul className="flex flex-wrap gap-2">
               {[{ name: 'All', slug: '' }, ...chips].map((item) => {
                 const active = category ? item.slug === category.slug : item.slug === '';
                 return (
@@ -53,7 +53,7 @@ export function BlogIndex({ posts, page, category }: BlogIndexProps) {
                       href={item.slug ? `/blog/category/${item.slug}/` : '/blog/'}
                       aria-current={active ? 'page' : undefined}
                       className={cn(
-                        'inline-flex min-h-11 items-center rounded-full border px-4.5 text-sm font-semibold whitespace-nowrap transition-colors',
+                        'inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold md:px-4.5 whitespace-nowrap transition-colors',
                         active ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink hover:border-ink',
                       )}
                     >

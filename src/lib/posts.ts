@@ -128,6 +128,9 @@ let cache: Post[] | null = null;
 
 /** All posts (drafts only while developing), newest first. */
 export function getPosts(): Post[] {
+  // While developing, re-read the files every time so an edited post (a new
+  // cover, a fixed typo) shows up without restarting the dev server.
+  if (process.env.NODE_ENV !== 'production') cache = null;
   cache ??= readdirSync(POSTS_DIR)
     .filter((file) => file.endsWith('.md'))
     .map(readPost)

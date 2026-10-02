@@ -4,7 +4,7 @@ description: Five years of challenges, learning and growth — and the team that
 category: EduSolve news
 date: 2026-09-30
 author: Munavar Ali, Founder & CEO
-cover: /blog_images/edusolve_turns5_img.png
+cover: /blog_images/edusolve_5th_anniversary.png
 draft: true
 ---
 
