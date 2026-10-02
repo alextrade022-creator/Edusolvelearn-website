@@ -26,6 +26,8 @@ export const HOME_STEPS: readonly Step[] = [
 ];
 
 export interface Benefit {
+  /** Short tab label (Why EduSolve tabs). */
+  short: string;
   title: string;
   text: string;
   image: string;
@@ -34,12 +36,12 @@ export interface Benefit {
 
 // Images live in public/why_edu_images/1–6.png.
 export const HOME_BENEFITS: readonly Benefit[] = [
-  { title: 'Undivided 1-on-1 attention', text: 'One student, one teacher. Every lesson moves at your child’s pace — never rushed, never left behind.', image: '/why_edu_images/1.png', imageAlt: 'A tutor giving one student full attention' },
-  { title: 'Hand-picked expert tutors', text: 'Every tutor is interviewed, subject-tested and demo-vetted before they ever teach your child.', image: '/why_edu_images/2.png', imageAlt: 'An approved tutor profile' },
-  { title: 'Gulf-friendly timings', text: 'Evening and weekend slots that fit UAE, Qatar, Saudi, Bahrain, Kuwait and Oman schedules.', image: '/why_edu_images/3.png', imageAlt: 'A clock showing an evening class time' },
-  { title: 'Real progress tracking', text: 'Regular reports and parent updates, so you always know exactly how your child is doing.', image: '/why_edu_images/4.png', imageAlt: 'A progress chart trending upward' },
-  { title: 'Curriculum-aligned', text: 'Lessons mapped to your child’s exact board and school syllabus — not generic content.', image: '/why_edu_images/5.png', imageAlt: 'A checklist of curricula' },
-  { title: 'Start with a free demo', text: 'Meet the tutor and try a real class before you commit. No card, no pressure.', image: '/why_edu_images/6.png', imageAlt: 'A calendar with a free demo date circled' },
+  { short: '1-on-1', title: 'Undivided 1-on-1 attention', text: 'One student, one teacher. Every lesson moves at your child’s pace — never rushed, never left behind.', image: '/why_edu_images/1.png', imageAlt: 'A tutor giving one student full attention' },
+  { short: 'Expert tutors', title: 'Hand-picked expert tutors', text: 'Every tutor is interviewed, subject-tested and demo-vetted before they ever teach your child.', image: '/why_edu_images/2.png', imageAlt: 'An approved tutor profile' },
+  { short: 'Gulf timings', title: 'Gulf-friendly timings', text: 'Evening and weekend slots that fit UAE, Qatar, Saudi, Bahrain, Kuwait and Oman schedules.', image: '/why_edu_images/3.png', imageAlt: 'A clock showing an evening class time' },
+  { short: 'Progress', title: 'Real progress tracking', text: 'Regular reports and parent updates, so you always know exactly how your child is doing.', image: '/why_edu_images/4.png', imageAlt: 'A progress chart trending upward' },
+  { short: 'Curriculum', title: 'Curriculum-aligned', text: 'Lessons mapped to your child’s exact board and school syllabus — not generic content.', image: '/why_edu_images/5.png', imageAlt: 'A checklist of curricula' },
+  { short: 'Free demo', title: 'Start with a free demo', text: 'Meet the tutor and try a real class before you commit. No card, no pressure.', image: '/why_edu_images/6.png', imageAlt: 'A calendar with a free demo date circled' },
 ];
 
 export interface SelectionCheck {

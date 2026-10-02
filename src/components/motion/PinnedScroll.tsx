@@ -13,6 +13,8 @@ interface PinnedScrollProps {
   children: ReactNode;
   /** Extra scroll distance while pinned, in % of the viewport height (how long the interaction lasts). */
   distance?: number;
+  /** A different distance on phones (under 768px wide), where long holds mean a lot of thumb-scrolling. */
+  distanceSmall?: number;
   className?: string;
 }
 
@@ -30,7 +32,7 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 // Built on CSS `position: sticky`, so scrolling itself is never hijacked.
 // Heights use the "small viewport" so mobile address bars don't cause jumps.
 // With "reduce motion" nothing is pinned and children show their final state.
-export function PinnedScroll({ children, distance = 90, className }: PinnedScrollProps) {
+export function PinnedScroll({ children, distance = 90, distanceSmall, className }: PinnedScrollProps) {
   const blockRef = useRef<HTMLDivElement>(null);
   const spacerRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLDivElement>(null);
@@ -56,33 +58,64 @@ export function PinnedScroll({ children, distance = 90, className }: PinnedScrol
     if (!block || !spacer || !probe) return;
     const focus = block.querySelector<HTMLElement>('[data-pin-focus]');
 
-    const reset = () => {
+    // Un-stick only: clearing position/top never changes the page's height.
+    const unstick = () => {
       for (const element of [block, focus]) {
         element?.style.removeProperty('position');
         element?.style.removeProperty('top');
       }
+    };
+    const clearFocusRoom = () => {
       focus?.parentElement?.removeAttribute('data-pin-room');
       focus?.parentElement?.style.removeProperty('--pin-room');
+    };
+    // The block's own height, without the focus room (an ::after spacer plus
+    // the gap before it) that may still be inside it from the phone layout.
+    // Otherwise, after resizing from a phone to a laptop, the block would look a
+    // screen taller than it is, "not fit", and stay in phone mode.
+    const naturalBlockHeight = () => {
+      const parent = focus?.parentElement;
+      if (!parent?.hasAttribute('data-pin-room')) return block.offsetHeight;
+      const room = parseFloat(getComputedStyle(parent, '::after').height) || 0;
+      const gap = parseFloat(getComputedStyle(parent).rowGap) || 0;
+      return block.offsetHeight - room - gap;
+    };
+    // Full teardown (unmount only).
+    const reset = () => {
+      unstick();
+      clearFocusRoom();
       spacer.style.removeProperty('height');
+      block.removeAttribute('data-pin-mode');
     };
 
     const measure = () => {
-      reset(); // read the natural (unpinned) layout
+      // Read the natural (unpinned) layout. The scroll room (spacer / pin-room)
+      // stays in place while measuring: removing it, even for an instant, would
+      // shorten the page and the browser would clamp the scroll position — e.g.
+      // opening an FAQ answer near the bottom would jump the page to the footer.
+      unstick();
       const headerHeight = document.querySelector('header')?.getBoundingClientRect().height ?? 64;
       const viewport = probe.getBoundingClientRect().height; // 100svh
       const available = viewport - headerHeight;
-      const length = Math.max(1, Math.round((viewport * distance) / 100));
-      const pinned = !focus || block.offsetHeight <= available - 32 ? block : focus;
-      const top = Math.round(headerHeight + (available - pinned.offsetHeight) / 2);
+      const percent = distanceSmall !== undefined && window.innerWidth < 768 ? distanceSmall : distance;
+      const length = Math.max(1, Math.round((viewport * percent) / 100));
+      const blockHeight = naturalBlockHeight();
+      const pinned = !focus || blockHeight <= available - 32 ? block : focus;
+      const top = Math.round(headerHeight + (available - (pinned === block ? blockHeight : pinned.offsetHeight)) / 2);
       const naturalTop = pinned.getBoundingClientRect().top + window.scrollY;
 
       pinned.style.position = 'sticky';
       pinned.style.top = `${top}px`;
+      // Lets children adapt to what is pinned (see LifeChapters).
+      block.dataset.pinMode = pinned === block ? 'block' : 'focus';
       // Room to stay pinned: a spacer after the block, or (a sticky element
       // never leaves its parent's content box) an ::after spacer in the focus
       // element's parent — see [data-pin-room] in globals.css.
-      if (pinned === block) spacer.style.height = `${length}px`;
-      else if (pinned.parentElement) {
+      if (pinned === block) {
+        clearFocusRoom();
+        spacer.style.height = `${length}px`;
+      } else if (pinned.parentElement) {
+        spacer.style.removeProperty('height');
         pinned.parentElement.setAttribute('data-pin-room', '');
         pinned.parentElement.style.setProperty('--pin-room', `${length}px`);
       }
@@ -102,7 +135,7 @@ export function PinnedScroll({ children, distance = 90, className }: PinnedScrol
       window.removeEventListener('resize', remeasure);
       reset();
     };
-  }, [reduceMotion, distance, update]);
+  }, [reduceMotion, distance, distanceSmall, update]);
 
   if (reduceMotion) return <div className={className}>{children}</div>;
 

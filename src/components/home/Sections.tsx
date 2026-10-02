@@ -1,27 +1,27 @@
-import Link from 'next/link';
 import Image from 'next-image-export-optimizer';
 import { ArrowRightIcon, CheckIcon } from '@/components/icons';
 import { PinnedScroll } from '@/components/motion/PinnedScroll';
 import { Reveal } from '@/components/motion/Reveal';
-import { ZoomIn } from '@/components/motion/ZoomIn';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ArrowLink, ButtonLink } from '@/components/ui/Button';
-import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { PhoneLink } from '@/components/ui/PhoneLink';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { CURRICULA } from '@/content/curricula';
 import { CENTRES, FOUNDER, HOME_BENEFITS, HOME_STEPS, TUTOR_CHECKS, TUTOR_QUALITIES } from '@/content/home';
-import { LIFE_PREVIEW } from '@/content/life';
+import { LIFE_CHAPTERS, LIFE_PREVIEW } from '@/content/life';
 import { CONTACT } from '@/content/site';
 import { centreSchema } from '@/lib/structuredData';
 import { CurriculaPanels } from './CurriculaPanels';
+import { LifeChapters } from './LifeChapters';
 import { StepsTimeline } from './StepsTimeline';
 import { TutorApprovalCard } from './TutorApprovalCard';
-import { WhyCards } from './WhyCards';
+import { WhyTabs } from './WhyTabs';
 
 export function CurriculaSection() {
   return (
-    <Section labelledBy="curricula-title" className="flex flex-col gap-10 lg:gap-12">
+    // A touch less space above than other sections: the stats band ends in a rule.
+    <Section labelledBy="curricula-title" spaced={false} className="flex flex-col gap-10 pt-[4.125rem] md:pt-[5.25rem] lg:gap-12 xl:pt-[6.75rem]">
       <SectionHeading
         id="curricula-title"
         eyebrow="Curricula"
@@ -61,7 +61,7 @@ export function WhySection() {
         title="A classroom of one is a world of difference"
         action={<p className="max-w-[22.5rem] text-lead text-body">Six reasons Gulf families choose one-on-one tuition with EduSolve.</p>}
       />
-      <WhyCards benefits={HOME_BENEFITS} />
+      <WhyTabs benefits={HOME_BENEFITS} />
     </Section>
   );
 }
@@ -108,8 +108,9 @@ export function TutorsSection() {
 export function FounderSection() {
   return (
     <Section labelledBy="founder-title" className="grid items-center gap-8 lg:grid-cols-12 lg:gap-6">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-panel bg-placeholder sm:aspect-[4/3] lg:col-span-5 lg:aspect-auto lg:h-[37.5rem]">
-        <ZoomIn className="absolute inset-0">
+      <div className="founder-frame relative aspect-[4/5] overflow-hidden rounded-panel bg-placeholder sm:aspect-[4/3] lg:col-span-5 lg:aspect-auto lg:h-[37.5rem]">
+        {/* Zoom settle tied to the scroll (see .founder-zoom in globals.css). */}
+        <div className="founder-zoom absolute inset-0">
           <Image
             src={FOUNDER.photo}
             alt={`${FOUNDER.name}, ${FOUNDER.role}`}
@@ -117,7 +118,7 @@ export function FounderSection() {
             sizes="(min-width: 1024px) 480px, 100vw"
             className="object-cover object-top"
           />
-        </ZoomIn>
+        </div>
       </div>
       <Reveal className="lg:col-span-6 lg:col-start-7">
         <figure className="flex flex-col gap-7 lg:gap-8">
@@ -160,35 +161,41 @@ export function CentresSection() {
       {CENTRES.map((centre) => (
         <JsonLd key={centre.id} data={centreSchema(centre)} />
       ))}
-      <ol className="border-t border-line">
+      {/* Divider lines draw in and each row's content fades up as it scrolls into
+          view; rows get a light hover on laptops. See .centre-row in globals.css. */}
+      <ol>
         {CENTRES.map((centre, index) => (
           <li
             key={centre.id}
-            className="grid gap-x-6 gap-y-3 border-b border-line py-7 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.3fr)] md:py-9 lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1.4fr)_auto_auto] lg:items-baseline lg:gap-x-10"
+            className="centre-row group/row grid gap-x-6 gap-y-3 py-7 transition-colors duration-300 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1.3fr)] md:py-9 lg:-mx-4 lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1.4fr)_auto_auto] lg:items-baseline lg:gap-x-10 lg:rounded-xl lg:px-4 lg:hover:bg-panel/60"
           >
-            <span className="text-[0.8125rem] font-bold tracking-[0.06em] text-muted tabular-nums md:pt-2 lg:pt-0">
+            <span className="centre-fade text-[0.8125rem] font-bold tracking-[0.06em] text-muted tabular-nums md:pt-2 lg:pt-0">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <div className="flex flex-col gap-1">
-              <h3 className="font-serif text-[1.875rem] leading-tight font-medium tracking-[-0.02em] lg:text-[2.25rem]">{centre.name}</h3>
+            <div className="centre-fade flex flex-col gap-1">
+              <h3 className="font-serif text-[1.875rem] leading-tight font-medium tracking-[-0.02em] transition-transform duration-300 ease-[var(--ease-out-soft)] lg:text-[2.25rem] lg:group-hover/row:translate-x-1">
+                {centre.name}
+              </h3>
               <p className="text-xs font-bold tracking-[0.08em] text-muted uppercase">{centre.city}, Kerala</p>
             </div>
-            <address className="leading-relaxed text-body not-italic md:col-start-3 md:row-start-1 lg:col-start-auto lg:row-start-auto">
+            <address className="centre-fade leading-relaxed text-body not-italic md:col-start-3 md:row-start-1 lg:col-start-auto lg:row-start-auto">
               {centre.street}, {centre.locality} {centre.postalCode}
             </address>
             <div className="flex flex-wrap items-center gap-x-8 gap-y-1 md:col-start-3 lg:contents">
-              <a href={centre.phoneHref} className="inline-flex min-h-11 items-center font-semibold whitespace-nowrap tabular-nums transition-colors hover:text-red">
-                {centre.phone}
-              </a>
+              <PhoneLink
+                phone={centre.phone}
+                href={centre.phoneHref}
+                className="centre-fade inline-flex min-h-11 items-center font-semibold whitespace-nowrap tabular-nums transition-colors hover:text-red"
+              />
               <a
                 href={centre.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-2 font-semibold whitespace-nowrap text-red transition-colors hover:text-red-dark"
+                className="centre-fade group inline-flex min-h-11 items-center gap-2 font-semibold whitespace-nowrap text-red transition-colors hover:text-red-dark"
               >
                 Directions
                 <span className="sr-only"> to EduSolve {centre.name} (opens Google Maps)</span>
-                <ArrowRightIcon size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
+                <ArrowRightIcon size={18} className="transition-transform duration-300 group-hover:translate-x-1 lg:group-hover/row:translate-x-1" />
               </a>
             </div>
           </li>
@@ -200,26 +207,22 @@ export function CentresSection() {
 
 export function LifePreviewSection() {
   return (
-    <Section labelledBy="life-title" className="flex flex-col gap-10 lg:gap-12">
-      <SectionHeading
-        id="life-title"
-        eyebrow="Life at EduSolve"
-        title="Real people. Real classrooms. Real milestones."
-        action={<ArrowLink href="/life-at-edusolve/">See life at EduSolve</ArrowLink>}
-      />
-      <ul className="grid grid-cols-2 gap-x-3.5 gap-y-6 lg:grid-cols-4 lg:gap-6">
-        {LIFE_PREVIEW.map((item, index) => (
-          <Reveal as="li" key={item.id} delay={index * 0.08}>
-            <Link href="/life-at-edusolve/" className="group flex flex-col gap-3 lg:gap-4">
-              <ImagePlaceholder label="Photo" className="h-48 rounded-[0.875rem] transition-transform duration-300 group-hover:-translate-y-1 sm:h-64 lg:h-[21.25rem] lg:rounded-2xl" />
-              <span className="flex flex-col gap-1.5">
-                <span className="text-[0.6875rem] font-bold tracking-[0.06em] text-muted uppercase lg:text-xs">{item.category}</span>
-                <span className="text-[0.9375rem] leading-snug font-bold lg:text-[1.0625rem]">{item.title}</span>
-              </span>
-            </Link>
-          </Reveal>
-        ))}
-      </ul>
+    <Section labelledBy="life-title">
+      {/* Home only: pinned while the three chapters play, then the grid. */}
+      <PinnedScroll distance={260} distanceSmall={215}>
+        <LifeChapters
+          items={LIFE_PREVIEW}
+          chapters={LIFE_CHAPTERS}
+          heading={
+            <SectionHeading
+              id="life-title"
+              eyebrow="Life at EduSolve"
+              title={LIFE_CHAPTERS.map((chapter) => chapter.phrase).join(' ')}
+              action={<ArrowLink href="/life-at-edusolve/">See life at EduSolve</ArrowLink>}
+            />
+          }
+        />
+      </PinnedScroll>
     </Section>
   );
 }

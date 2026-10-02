@@ -38,10 +38,8 @@ export function StoriesSection() {
           </figure>
         </Reveal>
       </div>
+      {/* Carousel with a "More parent stories" end card, text link and arrows. */}
       <StoriesVideoRow ids={TESTIMONIAL_VIDEO_IDS} />
-      <ArrowLink href="/testimonials/" className="self-start">
-        More parent stories
-      </ArrowLink>
     </Section>
   );
 }
@@ -75,15 +73,26 @@ export function AppSection() {
             );
           })}
         </ul>
-        <div className="flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-5">
+        <div className="flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-3">
           {/* TODO(launch): swap for Google's official "Get it on Google Play" badge artwork. */}
           <a
             href={PLAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-ink px-5 py-2.5 text-white transition-colors hover:bg-black"
+            className="group relative inline-flex min-h-14 items-center justify-center gap-3 overflow-hidden rounded-xl bg-ink px-5 py-2.5 text-white"
           >
-            <svg width="24" height="26" viewBox="0 0 26 28" aria-hidden="true">
+            {/* Hover: a band of light sweeps across once (it snaps back unseen on leave). */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 w-1/2 -translate-x-[120%] skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-[260%] group-hover:transition-transform group-hover:duration-700 group-hover:ease-[var(--ease-out-soft)] motion-reduce:hidden"
+            />
+            <svg
+              width="24"
+              height="26"
+              viewBox="0 0 26 28"
+              aria-hidden="true"
+              className="transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:translate-x-[3px] motion-reduce:transition-none"
+            >
               <path d="M2 2l13 12L2 26z" fill="#fff" />
               <path d="M2 2l17 10-4 2z" fill="#fff" opacity="0.75" />
               <path d="M2 26l17-10-4-2z" fill="#fff" opacity="0.55" />
@@ -95,7 +104,28 @@ export function AppSection() {
               <span className="sr-only"> — the EduSolve app</span>
             </span>
           </a>
-          <p className="text-center text-sm text-muted sm:text-left">Free on Android</p>
+          {/* PLACEHOLDER until the iOS app launches; then use Apple's official "Download on the App Store" badge. */}
+          <span
+            title="Coming soon to iPhone"
+            className="group inline-flex min-h-14 cursor-default items-center justify-center gap-3 rounded-xl border-[1.5px] border-line-strong px-5 py-2.5 text-ink"
+          >
+            <svg
+              width="22"
+              height="26"
+              viewBox="4.4 3.2 14.6 18.2"
+              fill="currentColor"
+              aria-hidden="true"
+              className="origin-bottom transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:-rotate-[8deg] motion-reduce:transition-none"
+            >
+              <path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.72-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.18-1.53 2.66-.39 6.6 1.1 8.75.73 1.05 1.6 2.24 2.73 2.2 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.3-3.53zM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.68-.92 2.68.97.07 1.96-.49 2.56-1.23z" />
+            </svg>
+            <span className="flex flex-col text-left">
+              <span className="text-[0.625rem] font-semibold tracking-[0.06em] text-muted">COMING SOON</span>
+              <span className="text-lg leading-none font-bold">
+                <span className="sr-only">to the </span>App Store
+              </span>
+            </span>
+          </span>
         </div>
       </div>
       {front && back ? <AppPhones front={front} back={back} /> : null}

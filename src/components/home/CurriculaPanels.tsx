@@ -11,7 +11,9 @@ interface CurriculaPanelsProps {
 }
 
 // Laptop (lg+): a row of panels; the open one is wide, the rest are slim strips
-// with vertical names. Opening animates with a CSS flex-grow transition.
+// with vertical names. Opening animates with a CSS flex-grow transition. The
+// open panel's content is laid out at its final width from the start (so the
+// tags never wrap and unwrap while the panel grows) and fades in as it opens.
 // Phones/tablets: the same markup becomes a vertical accordion.
 export function CurriculaPanels({ curricula }: CurriculaPanelsProps) {
   const [openIndex, setOpenIndex] = useState(0);
@@ -29,7 +31,10 @@ export function CurriculaPanels({ curricula }: CurriculaPanelsProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2.5 lg:h-[28.75rem] lg:flex-row lg:gap-3">
+    <div
+      className="@container flex flex-col gap-2.5 lg:h-[28.75rem] lg:flex-row lg:gap-3"
+      style={{ ['--strips' as string]: curricula.length - 1 }}
+    >
       {curricula.map((curriculum, index) => {
         const open = index === openIndex;
         const number = String(index + 1).padStart(2, '0');
@@ -44,7 +49,8 @@ export function CurriculaPanels({ curricula }: CurriculaPanelsProps) {
             )}
           >
             {open ? (
-              <div className="flex h-full flex-col justify-between gap-6 p-6 md:p-8 lg:min-w-[28rem] lg:p-12">
+              // Final open width = row width − the slim strips (6rem each + 0.75rem gap) − borders.
+              <div className="flex h-full animate-[panel-content-in_520ms_var(--ease-out-soft)_120ms_both] flex-col justify-between gap-6 p-6 motion-reduce:animate-none md:p-8 lg:w-[calc(100cqw-var(--strips)*6.75rem-2px)] lg:p-12">
                 <div className="flex flex-col gap-4 lg:gap-5">
                   <div className="flex items-center justify-between text-sm font-bold">
                     <span className="text-red">{number}</span>

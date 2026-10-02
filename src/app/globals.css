@@ -305,6 +305,290 @@
    Scroll reveal (CSS scroll-driven animation; see components/motion/Reveal)
    Content is visible by default; supporting browsers fade it up as it enters.
    --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   Home centres list (CentresSection). The divider lines are drawn here (one
+   above each row, one under the last) so they can draw across left to right as
+   each row scrolls into view; the row's content fades up just behind its line.
+   On laptops a row has 1rem side padding for its hover tint, so the lines are
+   inset to match the content column.
+   Ranges are measured against the screen ("cover Nvh" = how far the row's top
+   has risen from the bottom of the screen), not the short row itself — otherwise
+   the whole effect would finish while the row is still at the bottom edge.
+   --------------------------------------------------------------------------- */
+.centre-row {
+  position: relative;
+}
+.centre-row::before,
+.centre-row:last-child::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: left center;
+}
+.centre-row::before {
+  top: 0;
+}
+.centre-row:last-child::after {
+  bottom: 0;
+}
+@media (width >= 64rem) {
+  .centre-row::before,
+  .centre-row:last-child::after {
+    inset-inline: 1rem;
+  }
+}
+@keyframes centre-line {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+@keyframes centre-fade {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .centre-row {
+      view-timeline: --centre-row block;
+    }
+    .centre-row::before {
+      animation: centre-line auto cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --centre-row;
+      animation-range: cover 10vh cover 38vh;
+    }
+    .centre-row:last-child::after {
+      animation: centre-line auto cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --centre-row;
+      animation-range: cover 22vh cover 50vh;
+    }
+    .centre-fade {
+      animation: centre-fade auto var(--ease-out-soft) both;
+      animation-timeline: --centre-row;
+      animation-range: cover 15vh cover 42vh;
+    }
+  }
+}
+
+/* Home Life section (LifeChapters). The HTML is the finished grid; each tile's
+   photo sits in `.life-photo`, which normally just fills its square.
+   While the section is pinned, the component sets `data-chapters`, measures
+   the stage (--big-w/--big-h: the large photo; --dx/--dy: from a tile to the
+   stage's corner) and feeds in the scroll progress:
+     --wipe    0 → 1  the photo is uncovered from the bottom up
+     --settle  0 → 1  the large photo shrinks into its tile, and the chapter's
+                      wide photo (`.life-wide`) fades into the tile's own
+     --late    0 → 1  heading, labels and the remaining tile fade in */
+.life-chapters {
+  --settle: 1;
+  --late: 1;
+}
+.life-photo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.life-photo img {
+  object-position: 50% calc(var(--focus-y, 50) * 1%);
+}
+.life-phrase,
+.life-wide {
+  display: none;
+}
+[data-chapters] .life-frame {
+  background: transparent;
+}
+[data-chapters] [data-chapter-frame] .life-photo {
+  inset: auto;
+  left: calc(var(--dx, 0px) * (1 - var(--settle)));
+  top: calc(var(--dy, 0px) * (1 - var(--settle)));
+  width: calc(100% + (var(--big-w, 100%) - 100%) * (1 - var(--settle)));
+  height: calc(100% + (var(--big-h, 100%) - 100%) * (1 - var(--settle)));
+  clip-path: inset(calc((1 - var(--wipe, 1)) * 100%) 0 0 0 round 1rem);
+}
+[data-chapters] .life-wide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  /* Stays until the photo is most of the way home, then gives way to the tile's own. */
+  opacity: calc((1 - var(--settle)) * 3);
+}
+[data-chapters] .life-wide img {
+  object-position: 50% calc(var(--wide-y, 50) * 1%);
+}
+[data-chapters] .life-late,
+[data-chapters='block'] .life-heading {
+  opacity: var(--late);
+}
+[data-chapters] .life-phrase {
+  position: absolute;
+  top: var(--phrase-y, 0);
+  left: var(--phrase-x, 0);
+  z-index: 4;
+  display: block;
+}
+
+/* Home founder photo: eases from 115% to normal size while it's properly in
+   view — from about 70% of it on screen ("entry 70%") until its top reaches the
+   top of the screen ("cover 60%") — and zooms back in when scrolling up.
+   The timeline is the frame's position on the page: the frame clips the photo
+   (overflow: hidden), which makes it a scroll box of its own, so a plain view()
+   on the photo would track the frame — which never scrolls — instead. */
+@keyframes founder-zoom {
+  from {
+    scale: 1.15;
+  }
+  to {
+    scale: 1;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .founder-frame {
+      view-timeline: --founder-photo block;
+    }
+    .founder-zoom {
+      animation: founder-zoom auto cubic-bezier(0.45, 0, 0.55, 1) both;
+      animation-timeline: --founder-photo;
+      animation-range: entry 70% cover 60%;
+    }
+  }
+}
+
+/* Why EduSolve tabs (WhyTabs): progress lines filling over each reason's time. */
+@keyframes why-tab-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   App phones (home, AppPhones): stacked → fanned out as the box scrolls into view.
+   Final (fanned) pose is the default, for "reduce motion" and older browsers.
+   Range offsets are measured from "cover 0%" (box top at the screen bottom):
+   - phones:  start as soon as it's on screen; end when its centre is mid-screen
+              (50vh + half the box height);
+   - md and up: start ~20% into view; end with its centre at 40% of the screen
+              (60vh + half the box height). Box heights: 25rem, sm 30rem, lg 36rem.
+   --------------------------------------------------------------------------- */
+.app-phones {
+  view-timeline: --app-phones block;
+  --phones-start: 2vh;
+  --phones-end: calc(50vh + 12.5rem);
+}
+@media (width >= 40rem) {
+  .app-phones {
+    --phones-end: calc(50vh + 15rem);
+  }
+}
+@media (width >= 48rem) {
+  .app-phones {
+    --phones-start: 20vh;
+    --phones-end: calc(60vh + 15rem);
+  }
+}
+@media (width >= 64rem) {
+  .app-phones {
+    --phones-end: calc(60vh + 18rem);
+  }
+}
+.app-phone-front {
+  rotate: -4deg;
+}
+.app-phone-back {
+  rotate: 5deg;
+  translate: 0 -3%;
+}
+@keyframes app-phone-front-in {
+  from {
+    translate: 38% 0;
+    rotate: 0deg;
+  }
+  to {
+    translate: 0 0;
+    rotate: -4deg;
+  }
+}
+/* The back phone waits for the first 15%, so the two feel layered. */
+@keyframes app-phone-back-in {
+  0%,
+  15% {
+    translate: -38% 4%;
+    rotate: 0deg;
+  }
+  100% {
+    translate: 0 -3%;
+    rotate: 5deg;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .app-phone-front,
+    .app-phone-back {
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --app-phones;
+      animation-range: cover var(--phones-start) cover var(--phones-end);
+    }
+    .app-phone-front {
+      animation-name: app-phone-front-in;
+    }
+    .app-phone-back {
+      animation-name: app-phone-back-in;
+    }
+  }
+}
+
+/* Curricula panel content appearing as its panel opens (CurriculaPanels). */
+@keyframes panel-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Life at EduSolve: a photo opened large (LifeLightbox). */
+@keyframes lightbox-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox[open]::backdrop {
+    animation: lightbox-fade 0.25s ease-out both;
+  }
+
+  .lightbox[open] .lightbox-card {
+    animation: lightbox-in 0.35s var(--ease-out-soft) both;
+  }
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;
