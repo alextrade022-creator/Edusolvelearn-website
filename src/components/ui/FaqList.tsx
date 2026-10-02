@@ -8,9 +8,9 @@ export function FaqList({ items, openFirst = true }: { items: readonly Faq[]; op
     <div className="border-t border-line">
       {items.map((item, index) => (
         <details key={item.q} className="faq-item group border-b border-line" open={openFirst && index === 0}>
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 py-5 text-[1.0625rem] leading-snug font-bold marker:hidden md:py-6.5 md:text-[1.1875rem] [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 py-5 text-[1.0625rem] leading-snug font-bold transition-colors duration-200 marker:hidden hover:text-red md:py-6.5 md:text-[1.1875rem] [&::-webkit-details-marker]:hidden">
             {item.q}
-            <span aria-hidden="true" className="shrink-0 text-ink">
+            <span aria-hidden="true" className="shrink-0">
               <PlusIcon size={20} className="group-open:hidden" />
               <MinusIcon size={20} className="hidden group-open:block" />
             </span>

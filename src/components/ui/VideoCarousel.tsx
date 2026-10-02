@@ -21,7 +21,13 @@ const loadDragFeatures = () => import('@/components/motion/features-drag').then(
 interface VideoCarouselProps {
   ids: readonly string[];
   /** Section heading, shown with the arrow buttons beside it. */
-  heading: ReactNode;
+  heading?: ReactNode;
+  /** Shown below the row with the arrow buttons beside it (used when there's no heading). */
+  footer?: ReactNode;
+  /** A final card after the videos (e.g. a link to more stories), sized like a video card. */
+  endCard?: ReactNode;
+  /** Show the ← → buttons (tablet and up). Default true. */
+  showArrows?: boolean;
 }
 
 /** Overscroll (px) at which the edge glow is fully lit. */
@@ -49,7 +55,7 @@ export function VideoCarousel(props: VideoCarouselProps) {
   );
 }
 
-function Carousel({ ids, heading }: VideoCarouselProps) {
+function Carousel({ ids, heading, footer, endCard, showArrows = true }: VideoCarouselProps) {
   const listId = useId();
   const viewportRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -226,19 +232,25 @@ function Carousel({ ids, heading }: VideoCarouselProps) {
     'inline-flex size-12 items-center justify-center rounded-full border border-line-strong bg-page text-ink transition-[opacity,background-color,border-color] duration-200 hover:border-ink hover:bg-white aria-disabled:opacity-35 aria-disabled:hover:border-line-strong aria-disabled:hover:bg-page';
   const glowClass = 'pointer-events-none absolute inset-y-[4%] z-10 w-16';
 
+  const arrows = showArrows && (
+    <div className={cn('hidden shrink-0 gap-3', edges.scrollable && 'md:flex')}>
+      <button type="button" aria-label="Previous videos" aria-controls={listId} aria-disabled={edges.start} onClick={() => go(-1)} className={arrowClass}>
+        <ArrowRightIcon size={20} className="rotate-180" />
+      </button>
+      <button type="button" aria-label="Next videos" aria-controls={listId} aria-disabled={edges.end} onClick={() => go(1)} className={arrowClass}>
+        <ArrowRightIcon size={20} />
+      </button>
+    </div>
+  );
+
   return (
-    <div className="flex flex-col gap-10 lg:gap-12">
-      <div className="flex items-end justify-between gap-6">
-        {heading}
-        <div className={cn('hidden shrink-0 gap-3', edges.scrollable && 'md:flex')}>
-          <button type="button" aria-label="Previous videos" aria-controls={listId} aria-disabled={edges.start} onClick={() => go(-1)} className={arrowClass}>
-            <ArrowRightIcon size={20} className="rotate-180" />
-          </button>
-          <button type="button" aria-label="Next videos" aria-controls={listId} aria-disabled={edges.end} onClick={() => go(1)} className={arrowClass}>
-            <ArrowRightIcon size={20} />
-          </button>
+    <div className={cn('flex flex-col', heading ? 'gap-10 lg:gap-12' : 'gap-6 md:gap-8')}>
+      {heading ? (
+        <div className="flex items-end justify-between gap-6">
+          {heading}
+          {arrows}
         </div>
-      </div>
+      ) : null}
 
       <div
         ref={viewportRef}
@@ -294,8 +306,16 @@ function Carousel({ ids, heading }: VideoCarouselProps) {
               <YouTubeFacade id={id} title={`EduSolve student story ${index + 1}`} className="aspect-[9/14] rounded-2xl" />
             </li>
           ))}
+          {endCard ? <li className="w-[12.5rem] shrink-0 md:w-[15rem] lg:w-[17.5rem]">{endCard}</li> : null}
         </m.ul>
       </div>
+
+      {heading ? null : (
+        <div className="flex items-center justify-between gap-6">
+          {footer}
+          {arrows}
+        </div>
+      )}
     </div>
   );
 }

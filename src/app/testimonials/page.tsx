@@ -25,8 +25,8 @@ export default function TestimonialsPage() {
         intro="Parents and students across the Gulf on what one-on-one tuition changed for them."
       />
 
-      {/* Tight spacing above and below the stats (30% less than between other sections). */}
-      <Section spaced="tight">
+      {/* A little tighter than the shared tight spacing above and below the stats (about 35% less than between other sections). */}
+      <Section spaced={false} className="pt-[3.625rem] md:pt-[4.625rem] xl:pt-[5.875rem]">
         <dl className="grid grid-cols-2 border-y border-line md:grid-cols-4 md:py-10">
           {TESTIMONIAL_STATS.map((stat, index) => (
             <div
@@ -41,7 +41,7 @@ export default function TestimonialsPage() {
       </Section>
 
       {featured ? (
-        <Section spaced="tight">
+        <Section spaced={false} className="pt-[3.625rem] md:pt-[4.625rem] xl:pt-[5.875rem]">
           <figure className="flex max-w-[56rem] flex-col gap-7">
             <blockquote className="font-serif text-[1.625rem] leading-[1.3] tracking-[-0.01em] md:text-[2.5rem] md:leading-[1.25]">
               “{featured.text}”

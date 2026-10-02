@@ -27,11 +27,12 @@ export default function CoursesPage() {
         <ButtonLink href="/contact/">Book a free demo class</ButtonLink>
       </PageHero>
 
-      {/* One editorial block per curriculum; ids match the home page links (#cbse …). */}
-      <Section spaced="tight" className="flex flex-col">
+      {/* One editorial block per curriculum; ids match the home page links (#cbse …).
+          A touch tighter than the shared tight spacing (about 35% less than standard). */}
+      <Section spaced={false} className="flex flex-col pt-[3.625rem] md:pt-[4.625rem] xl:pt-[5.875rem]">
         <ol className="border-t border-line">
           {CURRICULA.map((curriculum, index) => (
-            <li key={curriculum.id} id={curriculum.id} className="scroll-mt-24 border-b border-line py-10 md:py-14">
+            <li key={curriculum.id} id={curriculum.id} className="scroll-mt-24 border-b border-line py-8 md:py-11">
               <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-6">
                 <div className="flex flex-col gap-3 lg:col-span-4">
                   <p className="text-sm font-bold text-red">{String(index + 1).padStart(2, '0')}</p>

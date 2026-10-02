@@ -22,7 +22,7 @@ const FACTS = [
   { label: 'Founded', value: '2021' },
   { label: 'Head office', value: 'Kozhikode, Kerala' },
   { label: 'Learning centres', value: '2 in Kerala' },
-  { label: 'Families served', value: 'Across 6 Gulf countries' },
+  { label: 'Families served', value: '12+ countries' },
 ] as const;
 
 const initials = (name: string) =>
@@ -41,21 +41,23 @@ export default function AboutPage() {
         intro="EduSolve began in Kozhikode, Kerala, with one belief — that distance should never decide the quality of a child’s education."
       />
 
-      <Section>
-        <dl className="grid grid-cols-2 border-y border-line lg:grid-cols-4">
+      {/* Tight spacing above and below the facts strip, as with the Stories stats. */}
+      <Section spaced="tight">
+        {/* Same open-line style as the Stories stats: dividers float between the rules. */}
+        <dl className="grid grid-cols-2 border-y border-line md:grid-cols-4 md:py-10">
           {FACTS.map((fact, index) => (
             <div
               key={fact.label}
-              className={`flex flex-col-reverse gap-1.5 px-4 py-6 md:py-8 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line lg:border-b-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
+              className={`flex flex-col-reverse items-center gap-2 px-3 py-6 text-center md:py-0 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line md:border-b-0' : ''} ${index === 2 ? 'md:border-l md:border-line' : ''}`}
             >
-              <dt className="text-[0.8125rem] font-semibold text-muted">{fact.label}</dt>
-              <dd className="font-serif text-[1.375rem] leading-tight font-medium md:text-[1.75rem]">{fact.value}</dd>
+              <dt className="text-sm text-muted">{fact.label}</dt>
+              <dd className="font-serif text-[1.25rem] leading-tight font-medium tracking-[-0.015em] text-balance md:text-[1.375rem] lg:text-[1.75rem]">{fact.value}</dd>
             </div>
           ))}
         </dl>
       </Section>
 
-      <Section className="grid gap-10 lg:grid-cols-12 lg:gap-6">
+      <Section spaced="tight" className="grid gap-10 lg:grid-cols-12 lg:gap-6">
         <div className="lg:col-span-5">
           <SectionHeading eyebrow="Our story" title="A small idea in Kerala, now trusted across the Gulf" />
         </div>
