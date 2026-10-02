@@ -10,7 +10,10 @@ const JITTER = 2;
 
 const getHeader = () => document.querySelector<HTMLElement>('[data-site-header]');
 
+// Only touches the attribute when the state actually changes: even re-setting
+// the same value makes the browser recheck the header's styles mid-scroll.
 const setHidden = (header: HTMLElement, hidden: boolean) => {
+  if (header.hasAttribute('data-hidden') === hidden) return;
   if (hidden) header.setAttribute('data-hidden', '');
   else header.removeAttribute('data-hidden');
 };
@@ -36,9 +39,25 @@ export function HeaderAutoHide() {
     if (!header) return;
     lastY.current = window.scrollY;
 
+    // Page height, measured when sizes change rather than on every scroll
+    // (reading it mid-scroll can force a layout recalculation).
+    let maxY = 0;
+    const measure = () => {
+      maxY = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    window.addEventListener('resize', measure);
+
     const onScroll = () => {
       const y = window.scrollY;
-      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+      // The mobile menu is open: keep the header showing whatever scrolls behind it.
+      if (header.hasAttribute('data-menu-open')) {
+        setHidden(header, false);
+        lastY.current = y;
+        return;
+      }
       // Overscroll bounce (iOS) at either end shouldn't flip the header.
       if (y < 0 || y > maxY) return;
       const delta = y - lastY.current;
@@ -54,6 +73,8 @@ export function HeaderAutoHide() {
     window.addEventListener('scroll', onScroll, { passive: true });
     header.addEventListener('focusin', onFocusIn);
     return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', onScroll);
       header.removeEventListener('focusin', onFocusIn);
       setHidden(header, false);

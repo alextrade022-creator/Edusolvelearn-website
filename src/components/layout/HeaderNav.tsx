@@ -26,19 +26,28 @@ export function HeaderNav() {
     setOpen(false);
   }
 
-  // Lock page scroll while the menu is open, and close it with Escape.
+  // Lock page scroll while the menu is open, and close it with Escape. The
+  // header is marked so it stays in view (HeaderAutoHide skips it).
+  // The lock goes on <html>, not <body>: with <body> clipped as well, the body
+  // becomes its own scroll box and the sticky header sticks to the top of the
+  // page instead of the screen — off-screen once you've scrolled down.
   useEffect(() => {
     if (!open) return;
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    header?.setAttribute('data-menu-open', '');
+    header?.removeAttribute('data-hidden');
     lenis?.stop();
-    const { overflow } = document.body.style;
-    document.body.style.overflow = 'hidden';
+    const root = document.documentElement;
+    const { overflow } = root.style;
+    root.style.overflow = 'hidden';
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setOpen(false);
     };
     window.addEventListener('keydown', onKey);
     return () => {
+      header?.removeAttribute('data-menu-open');
       lenis?.start();
-      document.body.style.overflow = overflow;
+      root.style.overflow = overflow;
       window.removeEventListener('keydown', onKey);
     };
   }, [open, lenis]);
@@ -54,11 +63,16 @@ export function HeaderNav() {
               href={link.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'text-[0.9375rem] font-medium transition-colors hover:text-ink',
-                active ? 'text-ink' : 'text-body',
+                'inline-grid text-[0.9375rem] transition-colors hover:text-ink',
+                active ? 'font-semibold text-ink' : 'font-medium text-body',
               )}
             >
-              {link.label}
+              {/* An invisible semibold copy reserves the wider width, so the
+                  active link's heavier weight never nudges the other links. */}
+              <span aria-hidden="true" className="invisible font-semibold [grid-area:1/1]">
+                {link.label}
+              </span>
+              <span className="[grid-area:1/1]">{link.label}</span>
             </Link>
           );
         })}
@@ -87,7 +101,7 @@ function MobileMenu({ id, pathname }: { id: string; pathname: string }) {
   return (
     <div
       id={id}
-      className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-page md:top-[4.75rem] xl:hidden"
+      className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto overscroll-contain border-t border-line bg-page md:top-[4.75rem] xl:hidden"
     >
       <nav aria-label="Mobile" className="container-site flex flex-col py-6">
         {NAV_LINKS.map((link) => (
