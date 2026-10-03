@@ -17,7 +17,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — One-on-one online tuition for Gulf families`,
+    default: `${SITE_NAME} — One-on-One Online Tuition for Gulf Families`,
     template: `%s | ${SITE_NAME}`,
   },
   description: DESCRIPTION,
@@ -27,12 +27,23 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: SITE_NAME,
     locale: 'en_IN',
-    title: `${SITE_NAME} — One-on-one online tuition for Gulf families`,
+    title: `${SITE_NAME} — One-on-One Online Tuition for Gulf Families`,
     description: DESCRIPTION,
   },
   twitter: { card: 'summary_large_image' },
   alternates: { types: { 'application/rss+xml': [{ url: '/blog/rss.xml', title: 'EduSolve blog' }] } },
-  icons: { icon: '/images/edusolve-logo.png', apple: '/images/edusolve-logo.png' },
+  // Square versions of the logo (the full logo is wide; tabs would squeeze it).
+  // /favicon.ico at the root is what browsers and Google look for first; the
+  // PNG sizes are multiples of 48px, as Google asks for its search results.
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+      { url: '/images/edusolve-icon-48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/images/edusolve-icon-96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/images/edusolve-icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/images/edusolve-apple-icon.png',
+  },
   formatDetection: { telephone: false },
 };
 
