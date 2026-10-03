@@ -2,7 +2,8 @@ import Image from 'next-image-export-optimizer';
 import Link from 'next/link';
 import type { ComponentType, ReactNode } from 'react';
 import { FacebookIcon, InstagramIcon, LinkedInIcon, WhatsAppIcon } from '@/components/icons';
-import { CONTACT, COUNTRIES_SERVED, FOOTER_GROUPS, FOOTER_TAGLINE, LEGAL_LINKS, SOCIAL_LINKS, type SocialLink } from '@/content/site';
+import { ALL_COUNTRIES_SERVED, CONTACT, COUNTRIES_SERVED, FOOTER_GROUPS, FOOTER_TAGLINE, LEGAL_LINKS, SOCIAL_LINKS, type SocialLink } from '@/content/site';
+import { BackToTop } from './BackToTop';
 
 const SOCIAL_ICONS: Record<SocialLink['icon'], ComponentType<{ size?: number }>> = {
   linkedin: LinkedInIcon,
@@ -94,6 +95,11 @@ export function Footer() {
                 {country}
               </li>
             ))}
+            <li>
+              <Link href="/courses/#where-we-teach" className={linkClass}>
+                and {ALL_COUNTRIES_SERVED.length - COUNTRIES_SERVED.length} more countries
+              </Link>
+            </li>
           </Column>
         </nav>
       </div>
@@ -101,7 +107,7 @@ export function Footer() {
       <div className="container-site">
         <div className="flex flex-col gap-4 border-t border-footer-line py-7 text-sm text-faint md:flex-row md:items-center md:justify-between">
           <p>© {YEAR} EduSolve. All rights reserved.</p>
-          <ul className="flex gap-6">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="transition-colors hover:text-white">
@@ -109,6 +115,9 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <BackToTop className="cursor-pointer transition-colors hover:text-white" />
+            </li>
           </ul>
         </div>
       </div>

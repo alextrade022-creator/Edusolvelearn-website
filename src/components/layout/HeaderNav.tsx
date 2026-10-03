@@ -91,12 +91,14 @@ export function HeaderNav() {
 
       {/* Portalled to <body>: the header's backdrop-filter would otherwise trap
           this position:fixed panel inside the header's own box. */}
-      {open ? createPortal(<MobileMenu id={menuId} pathname={pathname} />, document.body) : null}
+      {open ? createPortal(<MobileMenu id={menuId} pathname={pathname} onNavigate={() => setOpen(false)} />, document.body) : null}
     </>
   );
 }
 
-function MobileMenu({ id, pathname }: { id: string; pathname: string }) {
+// Every link closes the menu when tapped — including the page you're already
+// on, where no navigation happens to close it.
+function MobileMenu({ id, pathname, onNavigate }: { id: string; pathname: string; onNavigate: () => void }) {
   const rowClass = 'flex min-h-14 items-center border-b border-line-soft font-serif text-2xl font-medium text-ink';
   return (
     <div
@@ -109,17 +111,19 @@ function MobileMenu({ id, pathname }: { id: string; pathname: string }) {
             key={link.href}
             href={link.href}
             aria-current={isActive(pathname, link.href) ? 'page' : undefined}
+            onClick={onNavigate}
             className={rowClass}
           >
             {link.label}
           </Link>
         ))}
-        <Link href="/contact/" className={rowClass}>
+        <Link href="/contact/" onClick={onNavigate} className={rowClass}>
           Contact
         </Link>
         <div className="mt-8 flex flex-col gap-3">
           <Link
             href="/contact/"
+            onClick={onNavigate}
             className="inline-flex min-h-13 items-center justify-center rounded-xl bg-red px-6 text-base font-semibold text-white"
           >
             Book a free demo class

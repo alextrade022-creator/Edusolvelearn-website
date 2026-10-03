@@ -12,6 +12,11 @@ const getHeader = () => document.querySelector<HTMLElement>('[data-site-header]'
 
 // Only touches the attribute when the state actually changes: even re-setting
 // the same value makes the browser recheck the header's styles mid-scroll.
+// Keyboard focus inside the header (Tab), not focus left behind by a click: a
+// clicked nav link or the menu button keeps focus after the page changes, and
+// counting that would keep the header showing for good.
+const hasKeyboardFocus = (header: HTMLElement) => header.querySelector(':focus-visible') !== null;
+
 const setHidden = (header: HTMLElement, hidden: boolean) => {
   if (header.hasAttribute('data-hidden') === hidden) return;
   if (hidden) header.setAttribute('data-hidden', '');
@@ -65,10 +70,12 @@ export function HeaderAutoHide() {
       lastY.current = y;
       if (y <= HIDE_AFTER) setHidden(header, false);
       // Keep it visible while something in it has keyboard focus.
-      else setHidden(header, delta > 0 && !header.contains(document.activeElement));
+      else setHidden(header, delta > 0 && !hasKeyboardFocus(header));
     };
 
-    const onFocusIn = () => setHidden(header, false);
+    const onFocusIn = () => {
+      if (hasKeyboardFocus(header)) setHidden(header, false);
+    };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     header.addEventListener('focusin', onFocusIn);
