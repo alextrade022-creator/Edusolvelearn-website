@@ -5,7 +5,7 @@ category: Study tips
 date: 2026-09-18
 author: EduSolve Academic Team
 cover: /blog_images/Board_exam_stress_how_parents_can_help_new.png
-draft: true
+draft: false
 order: 6
 ---
 

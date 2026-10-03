@@ -5,7 +5,7 @@ category: Study tips
 date: 2026-08-20
 author: EduSolve Academic Team
 cover: /blog_images/5_study_habits_img_new.png
-draft: true
+draft: false
 order: 2
 ---
 

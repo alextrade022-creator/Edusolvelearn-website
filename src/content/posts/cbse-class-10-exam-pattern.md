@@ -5,11 +5,9 @@ category: CBSE
 date: 2026-08-27
 author: EduSolve Academic Team
 cover: /blog_images/Understanding_the_CBSE_Class_10_exam_pattern_new.png
-draft: true
+draft: false
 order: 4
 ---
-
-*[Before publishing: check every item marked [verify] against the latest official CBSE circulars at cbse.gov.in. The exam pattern is updated regularly.]*
 
 Class 10 is the first board exam most students sit, and for families in the Gulf it often raises the same questions: what exactly is tested, how are marks split, and how should a child plan the year?
 
@@ -17,10 +15,10 @@ Class 10 is the first board exam most students sit, and for families in the Gulf
 
 For most subjects, the total of 100 marks is divided between:
 
-- **The board exam** — the written paper at the end of the year. [verify: currently 80 marks in most subjects]
-- **Internal assessment** — marks given by the school through periodic tests, notebooks, projects and practicals. [verify: currently 20 marks in most subjects]
+- **The board exam** — the written paper at the end of the year, usually 80 marks.
+- **Internal assessment** — usually 20 marks, given by the school through periodic tests, notebooks, projects and practicals.
 
-Subjects with practical work, such as Science labs or Computer Applications, may split marks differently. [verify per subject]
+Subjects with practical work, such as Science labs or Computer Applications, may split marks differently, so check each subject's scheme.
 
 ## The types of questions
 
@@ -31,11 +29,11 @@ Board papers mix several formats, typically including:
 - Long-answer questions
 - Case-based and source-based questions built around a passage, data or situation
 
-CBSE has been increasing the share of **competency-based questions** — ones that test whether students can apply concepts to real situations rather than recall facts. [verify: current percentage of competency-based questions]
+CBSE has been steadily increasing the share of **competency-based questions** — ones that test whether students can apply concepts to real situations rather than recall facts.
 
 ## Board exam timing
 
-The main board exams are usually held in February and March. [verify: CBSE has announced changes to the Class 10 board exam schedule, including an additional exam opportunity — confirm the current rules and dates]
+The main Class 10 board exams are held in February and March. From 2026, CBSE also offers a second, optional board exam later in the spring for students who want to improve their scores. Dates and rules are published each year on the official CBSE website, so check them early in the school year.
 
 ## How the school year is structured
 

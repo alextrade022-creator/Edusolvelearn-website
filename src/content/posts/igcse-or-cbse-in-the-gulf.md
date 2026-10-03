@@ -5,7 +5,7 @@ category: IGCSE & IB
 date: 2026-09-03
 author: EduSolve Academic Team
 cover: /blog_images/IGCSE_or_CBSE_after_moving_to_the_Gulf_new.png
-draft: true
+draft: false
 order: 7
 ---
 

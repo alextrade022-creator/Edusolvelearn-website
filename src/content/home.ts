@@ -51,7 +51,7 @@ export interface SelectionCheck {
   meta: string;
 }
 
-// PLACEHOLDER: replace with the client's real hiring process.
+// The checks every tutor passes (confirmed by EduSolve).
 export const TUTOR_CHECKS: readonly SelectionCheck[] = [
   { label: 'Qualification verified', meta: 'Strong academic foundation' },
   { label: 'Subject test passed', meta: 'Deep command of the subject' },

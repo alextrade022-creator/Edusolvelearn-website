@@ -5,7 +5,7 @@ category: NCERT
 date: 2026-09-10
 author: EduSolve Academic Team
 cover: /blog_images/How_to_use_NCERT_textbooks_well_for_board_exams_new.png
-draft: true
+draft: false
 order: 3
 ---
 

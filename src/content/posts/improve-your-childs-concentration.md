@@ -5,7 +5,7 @@ category: Study tips
 date: 2026-10-03
 author: EduSolve Academic Team
 cover: /blog_images/How_to_Improve_Your_Childs_Concentration_While_Studying.png
-draft: true
+draft: false
 order: 9
 ---
 

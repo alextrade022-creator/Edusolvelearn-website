@@ -5,7 +5,7 @@ category: Study tips
 date: 2026-10-03
 author: EduSolve Academic Team
 cover: /blog_images/1_to_1_Tuition_vs_Group_Tuition.png
-draft: true
+draft: false
 order: 8
 ---
 

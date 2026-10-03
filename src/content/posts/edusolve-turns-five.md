@@ -6,7 +6,7 @@ date: 2026-09-30
 author: Munavar Ali, Founder & CEO
 cover: /blog_images/edusolve_5th_anniversary.png
 featured: true
-draft: true
+draft: false
 ---
 
 EduSolve began in Kozhikode, Kerala, in 2021 with a simple idea: every child deserves a teacher who knows them by name. Five years on, we teach students across the Gulf one-on-one, online, and support them between classes with the EduSolve Learning App.
