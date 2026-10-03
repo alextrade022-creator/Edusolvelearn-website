@@ -18,7 +18,7 @@ const initials = (name: string) =>
 function Portrait({ person, sizes, zoom = false }: { person: Person; sizes: string; zoom?: boolean }) {
   if (!person.photo) {
     return (
-      <div className="flex h-full items-end justify-center pb-8" aria-hidden="true">
+      <div className="flex h-full items-center justify-center" aria-hidden="true">
         <span className="font-serif text-[5rem] font-medium text-[#85817a]">{initials(person.name)}</span>
       </div>
     );
