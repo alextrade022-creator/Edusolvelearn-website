@@ -5,14 +5,15 @@ import { CtaSection } from '@/components/ui/CtaSection';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { CURRICULA, GRADE_LEVELS, SUBJECTS } from '@/content/curricula';
-import { COUNTRIES_SERVED } from '@/content/site';
+import { CURRICULA, GRADE_LEVELS, SUBJECT_GROUPS } from '@/content/curricula';
+import { COUNTRY_GROUPS } from '@/content/site';
+import { cn } from '@/lib/cn';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Courses & curricula — CBSE, ICSE, IGCSE, IB and American',
+  title: 'Courses & curricula — CBSE, ICSE, IGCSE, Kerala Board, IB and American',
   description:
-    'One-on-one online tuition for CBSE, ICSE/ISC, IGCSE, IB and American curricula, from LKG to Grade 12, for families across the UAE, Qatar, Saudi Arabia, Bahrain, Kuwait and Oman.',
+    'One-on-one online tuition for CBSE, ICSE/ISC, IGCSE, Kerala Board, IB and American curricula, from LKG to Grade 12, for families across the Gulf and around the world.',
   path: '/courses/',
 });
 
@@ -72,29 +73,45 @@ export default function CoursesPage() {
         <div className="lg:col-span-4">
           <SectionHeading eyebrow="Subjects" title="Support in every subject" intro="Ask us about any subject that isn’t listed." />
         </div>
-        <ul className="flex flex-wrap content-start gap-2.5 lg:col-span-7 lg:col-start-6">
-          {SUBJECTS.map((subject) => (
-            <li key={subject} className="rounded-full border border-line bg-white px-4 py-2.5 text-[0.9375rem] font-semibold">
-              {subject}
-            </li>
-          ))}
-        </ul>
+        <GroupedList groups={SUBJECT_GROUPS} className="lg:col-span-7 lg:col-start-6" />
       </Section>
 
-      <Section className="grid gap-10 lg:grid-cols-12 lg:gap-6">
+      <Section id="where-we-teach" className="grid gap-10 lg:grid-cols-12 lg:gap-6">
         <div className="lg:col-span-4">
-          <SectionHeading eyebrow="Where we teach" title="Families across the Gulf" intro="Classes are scheduled around your local time zone." />
+          <SectionHeading eyebrow="Where we teach" title="Families across the world" intro="Classes are scheduled around your local time zone." />
         </div>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:col-span-7 lg:col-start-6">
-          {COUNTRIES_SERVED.map((country) => (
-            <li key={country} className="rounded-2xl border border-line bg-white px-5 py-4 font-semibold">
-              {country}
-            </li>
-          ))}
-        </ul>
+        <GroupedList
+          groups={COUNTRY_GROUPS.map((group) => ({ name: group.name, items: group.items.map((country) => country.short ?? country.name) }))}
+          className="lg:col-span-7 lg:col-start-6"
+        />
       </Section>
 
       <CtaSection />
     </>
+  );
+}
+
+// Rows of items under small group labels, separated by thin rules: a light way
+// to list many subjects or countries (label above the items on phones).
+function GroupedList({ groups, className }: { groups: readonly { name: string; items: readonly string[] }[]; className?: string }) {
+  return (
+    <dl className={cn('border-b border-line', className)}>
+      {groups.map((group) => (
+        <div key={group.name} className="grid gap-1.5 border-t border-line py-4 sm:grid-cols-[11rem_1fr] sm:gap-6 md:py-5">
+          <dt className="text-sm text-muted sm:pt-0.5">{group.name}</dt>
+          {/* Each item has a dot before it; the list is shifted left and clipped, so
+              the dot of whichever item starts a line is hidden. */}
+          <dd className="overflow-hidden">
+            <ul className="-ml-6 flex flex-wrap gap-y-1 text-[1.0625rem] leading-relaxed font-semibold">
+              {group.items.map((item) => (
+                <li key={item} className="before:inline-block before:w-6 before:text-center before:font-normal before:text-line-strong before:content-['·']">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

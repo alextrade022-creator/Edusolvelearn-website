@@ -3,7 +3,7 @@
 import { PLAY_STORE_URL, SITE_NAME, SITE_URL } from '@/config';
 import type { FaqGroup } from '@/content/faq';
 import type { Centre } from '@/content/home';
-import { CONTACT, COUNTRIES_SERVED, SOCIAL_LINKS } from '@/content/site';
+import { ALL_COUNTRIES_SERVED, CONTACT, SOCIAL_LINKS } from '@/content/site';
 import type { Post } from '@/lib/posts';
 
 const ORG_ID = `${SITE_URL}/#organization`;
@@ -23,7 +23,7 @@ export const organizationSchema = {
   email: CONTACT.email,
   telephone: CONTACT.phone,
   address: { '@type': 'PostalAddress', addressLocality: 'Kozhikode', addressRegion: 'Kerala', addressCountry: 'IN' },
-  areaServed: COUNTRIES_SERVED.map((name) => ({ '@type': 'Country', name })),
+  areaServed: ALL_COUNTRIES_SERVED.map(({ name }) => ({ '@type': 'Country', name })),
   sameAs: [...SOCIAL_LINKS.filter((link) => link.icon !== 'whatsapp').map((link) => link.href), PLAY_STORE_URL],
   contactPoint: [
     {

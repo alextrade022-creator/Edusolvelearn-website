@@ -6,10 +6,11 @@ import { Reveal } from '@/components/motion/Reveal';
 import { ButtonLink } from '@/components/ui/Button';
 import { CtaSection } from '@/components/ui/CtaSection';
 import { PageHero } from '@/components/ui/PageHero';
+import { QuoteCards } from '@/components/ui/QuoteCards';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { TUTOR_CHECKS, TUTOR_QUALITIES } from '@/content/home';
-import { TUTOR_SELECTION_STAGES } from '@/content/pages';
+import { TUTOR_QUOTES, TUTOR_SELECTION_STAGES, TUTOR_STATS } from '@/content/pages';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = pageMetadata({
@@ -28,7 +29,22 @@ export default function TeachersPage() {
         intro="We don’t show a catalogue of faces. Instead, every tutor passes the same careful selection — so whoever is matched with your child meets the same high bar."
       />
 
-      <Section spaced="tight" className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
+      {/* Same stats strip and spacing as the Stories page. */}
+      <Section spaced={false} className="pt-[3.625rem] md:pt-[4.625rem] xl:pt-[5.875rem]">
+        <dl className="grid grid-cols-2 border-y border-line md:grid-cols-4 md:py-10">
+          {TUTOR_STATS.map((stat, index) => (
+            <div
+              key={stat.label}
+              className={`flex flex-col-reverse items-center gap-2 px-3 py-6 text-center md:py-0 ${index % 2 === 1 ? 'border-l border-line' : ''} ${index < 2 ? 'border-b border-line md:border-b-0' : ''} ${index === 2 ? 'md:border-l md:border-line' : ''}`}
+            >
+              <dt className="text-sm text-muted">{stat.label}</dt>
+              <dd className="font-serif text-[2.25rem] leading-none font-medium tracking-[-0.03em] md:text-[3rem]">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+
+      <Section spaced={false} className="grid items-start gap-12 pt-[3.625rem] md:pt-[4.625rem] lg:grid-cols-12 lg:gap-6 xl:pt-[5.875rem]">
         <div className="flex flex-col gap-10 lg:col-span-6">
           <SectionHeading eyebrow="Our selection process" title="Four stages before the first class" />
           <StepsTimeline steps={TUTOR_SELECTION_STAGES} vertical />
@@ -38,7 +54,8 @@ export default function TeachersPage() {
         </div>
       </Section>
 
-      <Section className="flex flex-col gap-10 lg:gap-12">
+      {/* A touch less space above than the standard gap. */}
+      <Section spaced={false} className="flex flex-col gap-10 pt-[5rem] md:pt-[6.25rem] lg:gap-12 xl:pt-[8rem]">
         <SectionHeading eyebrow="What we look for" title="Qualities every EduSolve tutor shares" />
         <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
           {TUTOR_QUALITIES.map((quality, index) => (
@@ -51,8 +68,8 @@ export default function TeachersPage() {
         </ul>
       </Section>
 
-      {/* Top spacing matches the CTA section's below, so the card sits evenly between. */}
-      <Section spaced={false} className="pt-16 md:pt-24 xl:pt-[7.5rem]">
+      {/* The invitation to teach comes before the tutor quotes, so it never ends up far down the page as quotes are added. */}
+      <Section spaced={false} className="pt-[3.75rem] md:pt-[5.5rem] xl:pt-[6.875rem]">
         <Reveal className="flex flex-col gap-6 rounded-panel bg-ink px-6 py-10 text-white md:flex-row md:items-center md:justify-between md:px-14 md:py-14">
           <div className="flex flex-col gap-3">
             <p className="text-[0.8125rem] font-bold tracking-[0.08em] text-footer-text uppercase">Teach with us</p>
@@ -63,6 +80,13 @@ export default function TeachersPage() {
             Apply to teach
           </ButtonLink>
         </Reveal>
+      </Section>
+
+      {/* PLACEHOLDER quotes (see TUTOR_QUOTES): what teaching here is like. */}
+      {/* A touch less space above than the standard gap. */}
+      <Section spaced={false} className="flex flex-col gap-10 pt-[4.5rem] md:pt-[5.75rem] lg:gap-12 xl:pt-[7.25rem]">
+        <SectionHeading eyebrow="From our tutors" title="What teaching at EduSolve is like" />
+        <QuoteCards quotes={TUTOR_QUOTES} quoteLines={4} />
       </Section>
 
       <CtaSection />

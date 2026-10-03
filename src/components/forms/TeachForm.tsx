@@ -87,7 +87,7 @@ export function TeachForm() {
             </Select>
           </Field>
           <Field label="Qualification *" htmlFor="qualification" error={form.errorFor('qualification')}>
-            <input id="qualification" className={inputClass} value={form.values.qualification} onChange={(e) => form.setValue('qualification', e.target.value)} onBlur={() => form.touch('qualification')} aria-invalid={Boolean(form.errorFor('qualification'))} aria-describedby={describe('qualification')} placeholder="e.g. B.Ed., M.Sc. Mathematics" />
+            <input id="qualification" className={inputClass} value={form.values.qualification} onChange={(e) => form.setValue('qualification', e.target.value)} onBlur={() => form.touch('qualification')} aria-invalid={Boolean(form.errorFor('qualification'))} aria-describedby={describe('qualification')} placeholder="e.g. B.Ed., teaching diploma" />
           </Field>
         </div>
 

@@ -42,6 +42,17 @@ export const CURRICULA: readonly Curriculum[] = [
     tags: ['Cambridge', 'Edexcel', 'Grades 9–10 focus'],
   },
   {
+    // PLACEHOLDER copy for the client to confirm (grades covered, wording).
+    id: 'kerala',
+    name: 'Kerala Board',
+    short: 'Kerala',
+    grades: 'Class 1 – 12',
+    summary: 'Kerala State syllabus support, from primary classes to the SSLC and Plus Two exams.',
+    detail:
+      'Tutors who know the Kerala State (SCERT) syllabus support students through their school years, the SSLC exam in Class 10 and the Higher Secondary Plus One and Plus Two years.',
+    tags: ['SCERT syllabus', 'SSLC', 'Plus One & Plus Two'],
+  },
+  {
     id: 'ib',
     name: 'IB',
     short: 'IB',
@@ -64,11 +75,16 @@ export const CURRICULA: readonly Curriculum[] = [
 
 export const CURRICULUM_NAMES = ['CBSE', 'ICSE', 'IGCSE', 'IB', 'American'] as const;
 
-export const SUBJECTS = [
-  'Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'Hindi',
-  'Malayalam', 'Arabic', 'Computer Science', 'Accountancy', 'Economics',
-  'Business Studies', 'Social Science', 'EVS', 'French',
-] as const;
+// Subjects on the Courses page, in groups. Add a subject to its group; the
+// "Subjects we teach" count on Our tutors follows by itself.
+export const SUBJECT_GROUPS: readonly { name: string; items: readonly string[] }[] = [
+  { name: 'Maths and sciences', items: ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Computer Science'] },
+  { name: 'Languages', items: ['English', 'Hindi', 'Malayalam', 'Arabic', 'French'] },
+  { name: 'Commerce and humanities', items: ['Accountancy', 'Economics', 'Business Studies', 'Social Science', 'Psychology'] },
+  { name: 'Early years and skills', items: ['EVS', 'Abacus', 'Physical Education'] },
+];
+
+export const SUBJECTS: readonly string[] = SUBJECT_GROUPS.flatMap((group) => group.items);
 
 export interface GradeLevel {
   range: string;

@@ -66,14 +66,38 @@ export const SOCIAL_LINKS: readonly SocialLink[] = [
   { label: 'WhatsApp', href: CONTACT.whatsappUrl, icon: 'whatsapp' },
 ];
 
-export const COUNTRIES_SERVED = [
-  'United Arab Emirates',
-  'Qatar',
-  'Saudi Arabia',
-  'Bahrain',
-  'Kuwait',
-  'Oman',
-] as const;
+// Headline counts, used wherever the site quotes them (home stats, Stories,
+// Our tutors, About), so they always agree. Shown with a "+".
+export const TUTOR_COUNT = 2000;
+export const COUNTRY_COUNT = 20;
+
+export interface ServedCountry {
+  name: string;
+  /** Shorter label for tight lists (UAE, USA). */
+  short?: string;
+}
+
+// Every country EduSolve teaches in, by region (Gulf first: our core families).
+// Shown on the Courses page; the Gulf is also listed in the footer, and all of
+// them go into the structured data.
+export const COUNTRY_GROUPS: readonly { name: string; items: readonly ServedCountry[] }[] = [
+  {
+    name: 'The Gulf',
+    items: [{ name: 'Saudi Arabia' }, { name: 'United Arab Emirates', short: 'UAE' }, { name: 'Kuwait' }, { name: 'Qatar' }, { name: 'Bahrain' }, { name: 'Oman' }],
+  },
+  { name: 'Asia', items: [{ name: 'Malaysia' }, { name: 'India' }, { name: 'Japan' }, { name: 'Pakistan' }, { name: 'Uzbekistan' }] },
+  {
+    name: 'Europe',
+    items: [{ name: 'Germany' }, { name: 'Switzerland' }, { name: 'France' }, { name: 'Russia' }, { name: 'Sweden' }, { name: 'United Kingdom' }],
+  },
+  { name: 'North America', items: [{ name: 'United States', short: 'USA' }, { name: 'Mexico' }, { name: 'Canada' }] },
+  { name: 'Africa and Australia', items: [{ name: 'Egypt' }, { name: 'Australia' }] },
+];
+
+export const ALL_COUNTRIES_SERVED: readonly ServedCountry[] = COUNTRY_GROUPS.flatMap((group) => group.items);
+
+/** The Gulf countries (footer). */
+export const COUNTRIES_SERVED: readonly string[] = (COUNTRY_GROUPS[0]?.items ?? []).map((country) => country.name);
 
 export const FOOTER_TAGLINE =
   'Warm, one-on-one online tuition for Gulf-based Indian families — LKG to Grade 12.';

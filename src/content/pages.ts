@@ -1,6 +1,8 @@
 // Content for the inner pages: How it works, About, Our tutors and Stories.
 
+import { SUBJECTS } from './curricula';
 import { TESTIMONIAL_VIDEO_IDS, type FeaturedQuote, type Step } from './home';
+import { COUNTRY_COUNT, TUTOR_COUNT } from './site';
 
 export interface DetailedStep extends Step {
   time: string;
@@ -56,22 +58,37 @@ export const TUTOR_SELECTION_STAGES: readonly Step[] = [
 ];
 
 // Confirmed by the client (carried over from the previous site).
-// Video stories on the Stories page (the home page shows the first five).
-// PLACEHOLDER: the five home videos repeated until ten unique links arrive.
-export const STORIES_PAGE_VIDEO_IDS: readonly string[] = [...TESTIMONIAL_VIDEO_IDS, ...TESTIMONIAL_VIDEO_IDS];
+// Video stories on the Stories page: every student story video.
+export const STORIES_PAGE_VIDEO_IDS: readonly string[] = TESTIMONIAL_VIDEO_IDS;
 
 export const TESTIMONIAL_STATS: readonly { value: string; label: string }[] = [
   { value: '4.9/5', label: 'Average parent rating' },
-  { value: '1000+', label: 'Expert tutors' },
-  { value: '12+', label: 'Countries served' },
+  { value: `${TUTOR_COUNT.toLocaleString('en-US')}+`, label: 'Expert tutors' },
   { value: '95%', label: 'Families who continue' },
+  { value: `${COUNTRY_COUNT}+`, label: 'Countries served' },
+];
+
+// Our tutors page stats strip. Subjects: the list on the Courses page (more on
+// request, hence the "+"); curricula: shown as "5+" by the client's choice.
+export const TUTOR_STATS: readonly { value: string; label: string }[] = [
+  { value: `${SUBJECTS.length}+`, label: 'Subjects we teach' },
+  { value: `${TUTOR_COUNT.toLocaleString('en-US')}+`, label: 'Expert tutors' },
+  { value: '5+', label: 'Curricula we offer' },
+  { value: `${COUNTRY_COUNT}+`, label: 'Countries served' },
+];
+
+// PLACEHOLDER: sample tutor quotes until real ones (and photos) arrive.
+export const TUTOR_QUOTES: readonly FeaturedQuote[] = [
+  { text: 'Teaching one student at a time, I can see the exact moment something clicks. That never gets old.', name: 'Mathematics tutor', meta: 'CBSE & IGCSE' },
+  { text: 'It’s a genuinely fulfilling place to teach. Parents notice the progress, and so do I, week after week.', name: 'Science tutor', meta: 'ICSE & Kerala Board' },
+  { text: 'A wonderful experience. I get to know each child properly and plan every class around their needs.', name: 'English tutor', meta: 'IB & American' },
 ];
 
 export const TESTIMONIAL_QUOTES: readonly FeaturedQuote[] = [
-  { text: 'My son actually looks forward to his maths class now. The tutor is patient and explains until he truly understands. Best decision we made this year.', name: 'Parent of Grade 8 student', meta: 'Dubai, UAE', initial: 'A' },
-  { text: 'Being in Qatar, we worried about finding quality tuition. EduSolve matched us with a wonderful teacher who knows the CBSE syllabus perfectly.', name: 'Parent of Grade 10 student', meta: 'Doha, Qatar', initial: 'S' },
-  { text: 'The one-on-one attention changed everything. My daughter’s confidence in physics has grown so much before her board exams.', name: 'Parent of Grade 12 student', meta: 'Riyadh, Saudi Arabia', initial: 'R' },
-  { text: 'Flexible timings that actually work with our schedule, and regular updates so I always know how she’s doing. Truly hassle-free.', name: 'Parent of Grade 6 student', meta: 'Manama, Bahrain', initial: 'F' },
-  { text: 'The free demo sold us instantly. No pressure, just a great teacher who connected with my son from the very first class.', name: 'Parent of Grade 9 student', meta: 'Kuwait City, Kuwait', initial: 'M' },
-  { text: 'IGCSE prep felt overwhelming until we found EduSolve. The tutor broke everything down and kept my daughter calm and prepared.', name: 'Parent of Grade 10 student', meta: 'Muscat, Oman', initial: 'H' },
+  { text: 'My son actually looks forward to his maths class now. The tutor is patient and explains until he truly understands. Best decision we made this year.', name: 'Parent of Grade 8 student', meta: 'Dubai, UAE' },
+  { text: 'Being in Qatar, we worried about finding quality tuition. EduSolve matched us with a wonderful teacher who knows the CBSE syllabus perfectly.', name: 'Parent of Grade 10 student', meta: 'Doha, Qatar' },
+  { text: 'The one-on-one attention changed everything. My daughter’s confidence in physics has grown so much before her board exams.', name: 'Parent of Grade 12 student', meta: 'Riyadh, Saudi Arabia' },
+  { text: 'Flexible timings that actually work with our schedule, and regular updates so I always know how she’s doing. Truly hassle-free.', name: 'Parent of Grade 6 student', meta: 'Manama, Bahrain' },
+  { text: 'The free demo sold us instantly. No pressure, just a great teacher who connected with my son from the very first class.', name: 'Parent of Grade 9 student', meta: 'Kuwait City, Kuwait' },
+  { text: 'IGCSE prep felt overwhelming until we found EduSolve. The tutor broke everything down and kept my daughter calm and prepared.', name: 'Parent of Grade 10 student', meta: 'Muscat, Oman' },
 ];
