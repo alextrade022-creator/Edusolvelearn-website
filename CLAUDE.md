@@ -64,8 +64,8 @@ Domain: https://edusolvelearn.com
 
 ## Where things live
 
-- `src/app/` — routes. Blog: `/blog/`, `/blog/page/[page]/`, `/blog/category/[category]/`
-  (+ `/page/[page]/`), `/blog/[slug]/`, `/blog/rss.xml`. SEO: `sitemap.ts`, `robots.ts`,
+- `src/app/` — routes. Blog: `/blog/`, `/blog/category/[category]/`, `/blog/[slug]/`, `/blog/rss.xml`
+  (cards six at a time with "Show more articles"; `featured: true` pins a post to the top of "All"). SEO: `sitemap.ts`, `robots.ts`,
   `opengraph-image.tsx`, `src/lib/seo.ts` (`pageMetadata`), `src/lib/structuredData.ts`.
 - `src/content/` — all copy and data (site, home, curricula, pages, faq, legal, life, forms, countries).
 - `src/content/posts/*.md` — blog posts (front matter: title, description, category, date, author,
