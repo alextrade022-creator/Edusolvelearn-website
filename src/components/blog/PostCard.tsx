@@ -3,7 +3,9 @@ import type { PostMeta } from '@/lib/posts';
 import { formatDate } from '@/lib/date';
 import { PostCover } from './PostCover';
 
-// Blog card: stacked on tablet/laptop, a compact row on phones.
+// Blog card: stacked on tablet/laptop, a compact row on phones. Title and
+// description each stop after 2 lines (with "…"), so cards in a row stay
+// even; the full text is on the post itself (and still in the HTML).
 export function PostCard({ post, showExcerpt = true }: { post: PostMeta; showExcerpt?: boolean }) {
   return (
     <Link
@@ -22,10 +24,10 @@ export function PostCard({ post, showExcerpt = true }: { post: PostMeta; showExc
         <span className="text-[0.6875rem] font-bold tracking-[0.04em] text-muted uppercase sm:self-start sm:rounded-full sm:bg-panel sm:px-3 sm:py-1 sm:text-xs sm:tracking-normal sm:text-body sm:normal-case">
           {post.category}
         </span>
-        <span className="text-[0.9375rem] leading-snug font-bold transition-colors group-hover:text-red sm:text-[1.1875rem] sm:tracking-[-0.01em]">
+        <span className="line-clamp-2 text-[0.9375rem] leading-snug font-bold transition-colors group-hover:text-red sm:text-[1.1875rem] sm:tracking-[-0.01em]">
           {post.title}
         </span>
-        {showExcerpt ? <span className="hidden leading-relaxed text-body sm:block">{post.description}</span> : null}
+        {showExcerpt ? <span className="hidden leading-relaxed text-body sm:line-clamp-2">{post.description}</span> : null}
         <span className="text-xs text-muted sm:text-sm">
           <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingMinutes} min read
         </span>

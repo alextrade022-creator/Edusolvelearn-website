@@ -5,6 +5,7 @@ category: EduSolve news
 date: 2026-09-30
 author: Munavar Ali, Founder & CEO
 cover: /blog_images/edusolve_5th_anniversary.png
+featured: true
 draft: true
 ---
 

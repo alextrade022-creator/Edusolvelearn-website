@@ -4,8 +4,9 @@ description: Why NCERT matters for CBSE, and a simple chapter-by-chapter routine
 category: NCERT
 date: 2026-09-10
 author: EduSolve Academic Team
-cover: /blog_images/How_to_use_NCERT_textbooks_well_for_board_exams.png
+cover: /blog_images/How_to_use_NCERT_textbooks_well_for_board_exams_new.png
 draft: true
+order: 3
 ---
 
 For CBSE students, the NCERT textbook is the single most important study resource. Board papers are built around it, and many questions follow its language, examples and exercises closely. Yet many students skim it and rush to thick reference books. Here’s how to use NCERT properly.

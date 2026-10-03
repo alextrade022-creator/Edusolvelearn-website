@@ -18,6 +18,10 @@ export interface PostMeta {
   author: string;
   cover: string | null;
   draft: boolean;
+  /** Pinned to the top of the blog's "All" view, even when newer posts exist. */
+  featured: boolean;
+  /** Position in listings (1 first). Posts without one follow, newest first. */
+  order: number | null;
   readingMinutes: number;
 }
 
@@ -50,13 +54,8 @@ export const BLOG_CATEGORIES: readonly BlogCategory[] = [
   { name: 'Study tips', slug: 'study-tips', description: 'Practical routines and advice to help your child learn well.' },
 ];
 
-export const POSTS_PER_PAGE = 12;
-
 export const categoryBySlug = (slug: string) => BLOG_CATEGORIES.find((category) => category.slug === slug);
 export const categorySlug = (name: string) => BLOG_CATEGORIES.find((category) => category.name === name)?.slug ?? null;
-
-/** Number of listing pages for a set of posts (always at least one). */
-export const pageCount = (total: number) => Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
 
 export function postsInCategory(slug: string): Post[] {
   const category = categoryBySlug(slug);
@@ -118,6 +117,8 @@ function readPost(file: string): Post {
     author: data.author ?? 'EduSolve Academic Team',
     cover: data.cover ?? null,
     draft: data.draft === 'true',
+    featured: data.featured === 'true',
+    order: data.order ? Number(data.order) : null,
     readingMinutes: Math.max(1, Math.round(words / 220)),
     html,
     toc,
@@ -126,7 +127,7 @@ function readPost(file: string): Post {
 
 let cache: Post[] | null = null;
 
-/** All posts (drafts only while developing), newest first. */
+/** All posts (drafts only while developing) in listing order: by `order`, then newest first (same-day posts by slug). */
 export function getPosts(): Post[] {
   // While developing, re-read the files every time so an edited post (a new
   // cover, a fixed typo) shows up without restarting the dev server.
@@ -134,7 +135,10 @@ export function getPosts(): Post[] {
   cache ??= readdirSync(POSTS_DIR)
     .filter((file) => file.endsWith('.md'))
     .map(readPost)
-    .toSorted((a, b) => b.date.localeCompare(a.date));
+    .toSorted(
+      (a, b) =>
+        (a.order ?? Infinity) - (b.order ?? Infinity) || b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug),
+    );
   return cache.filter((post) => INCLUDE_DRAFTS || !post.draft);
 }
 
@@ -152,5 +156,7 @@ export const toMeta = (post: Post): PostMeta => ({
   author: post.author,
   cover: post.cover,
   draft: post.draft,
+  featured: post.featured,
+  order: post.order,
   readingMinutes: post.readingMinutes,
 });

@@ -4,8 +4,9 @@ description: Practical, calm ways to support your child in the weeks before boar
 category: Study tips
 date: 2026-09-18
 author: EduSolve Academic Team
-cover: /blog_images/Board_exam_stress_how_parents_can_help.png
+cover: /blog_images/Board_exam_stress_how_parents_can_help_new.png
 draft: true
+order: 6
 ---
 
 Board exams are a big moment, and some nervousness is normal — a little pressure can even help a child focus. But when worry starts affecting sleep, appetite or confidence, the way parents respond can make a real difference.

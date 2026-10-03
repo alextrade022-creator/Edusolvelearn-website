@@ -4,8 +4,9 @@ description: What the board exam looks like, how the year is structured, and how
 category: CBSE
 date: 2026-08-27
 author: EduSolve Academic Team
-cover: /blog_images/Understanding_the_CBSE_Class_10_exam_pattern.png
+cover: /blog_images/Understanding_the_CBSE_Class_10_exam_pattern_new.png
 draft: true
+order: 4
 ---
 
 *[Before publishing: check every item marked [verify] against the latest official CBSE circulars at cbse.gov.in. The exam pattern is updated regularly.]*

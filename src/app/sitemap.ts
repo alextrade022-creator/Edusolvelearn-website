@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/config';
-import { BLOG_CATEGORIES, getPosts, pageCount, postsInCategory } from '@/lib/posts';
+import { BLOG_CATEGORIES, getPosts, postsInCategory } from '@/lib/posts';
 
 export const dynamic = 'force-static';
 
@@ -9,7 +9,8 @@ export const dynamic = 'force-static';
 export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string) => `${SITE_URL}${path}`;
   const posts = getPosts().filter((post) => !post.draft);
-  const latest = posts[0]?.date;
+  // Listings follow an editorial order, so the newest date is looked up.
+  const latest = posts.map((post) => post.date).toSorted().at(-1);
 
   const pages: MetadataRoute.Sitemap = [
     { url: url('/'), changeFrequency: 'weekly', priority: 1 },
@@ -28,16 +29,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   if (posts.length) {
     pages.push({ url: url('/blog/'), lastModified: latest, changeFrequency: 'weekly', priority: 0.7 });
-    for (let page = 2; page <= pageCount(posts.length); page += 1) {
-      pages.push({ url: url(`/blog/page/${page}/`), changeFrequency: 'weekly', priority: 0.4 });
-    }
     for (const category of BLOG_CATEGORIES) {
       const inCategory = postsInCategory(category.slug).filter((post) => !post.draft);
       if (!inCategory.length) continue;
       pages.push({ url: url(`/blog/category/${category.slug}/`), lastModified: inCategory[0]?.date, changeFrequency: 'weekly', priority: 0.5 });
-      for (let page = 2; page <= pageCount(inCategory.length); page += 1) {
-        pages.push({ url: url(`/blog/category/${category.slug}/page/${page}/`), changeFrequency: 'weekly', priority: 0.3 });
-      }
     }
     for (const post of posts) {
       pages.push({ url: url(`/blog/${post.slug}/`), lastModified: post.date, changeFrequency: 'monthly', priority: 0.6 });

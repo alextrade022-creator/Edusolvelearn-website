@@ -4,8 +4,9 @@ description: A practical checklist for parents — what to look for, what to ask
 category: Study tips
 date: 2026-09-24
 author: EduSolve Academic Team
-cover: /blog_images/How_to_choose_the_right_online_tutor_for_your_child.png
+cover: /blog_images/How_to_choose_the_right_online_tutor_for_your_child_new.png
 draft: true
+order: 1
 ---
 
 Choosing a tutor is one of the most important decisions you can make for your child’s learning — and when classes happen online, it can feel harder to judge who is right. The good news: a few simple checks will tell you almost everything you need to know.

@@ -4,8 +4,9 @@ description: Small routines at home that help your child get far more from every
 category: Study tips
 date: 2026-08-20
 author: EduSolve Academic Team
-cover: /blog_images/5_study_habits_img.png
+cover: /blog_images/5_study_habits_img_new.png
 draft: true
+order: 2
 ---
 
 One-on-one tuition gives your child a teacher’s full attention. But what happens between classes matters just as much as the class itself. These five habits help turn good lessons into lasting progress.

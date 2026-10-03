@@ -6,31 +6,27 @@ import { Pill } from '@/components/ui/Pill';
 import { Section } from '@/components/ui/Section';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/date';
-import { BLOG_CATEGORIES, getPosts, pageCount, POSTS_PER_PAGE, toMeta, type BlogCategory, type Post } from '@/lib/posts';
+import { BLOG_CATEGORIES, getPosts, toMeta, type BlogCategory, type Post } from '@/lib/posts';
 import { PostCard } from './PostCard';
 import { PostCover } from './PostCover';
+import { ShowMorePosts } from './ShowMorePosts';
 
 interface BlogIndexProps {
   /** Posts in scope (all posts, or one category), newest first. */
   posts: readonly Post[];
-  page: number;
   category?: BlogCategory;
 }
 
-const listPath = (category: BlogCategory | undefined, page: number) => {
-  const base = category ? `/blog/category/${category.slug}/` : '/blog/';
-  return page <= 1 ? base : `${base}page/${page}/`;
-};
-
-// A blog listing page (all posts or one category, one page of results). Every
-// variant is its own static page, so filters and page numbers are plain links:
-// no JavaScript, shareable URLs, and each category page can rank on its own.
-export function BlogIndex({ posts, page, category }: BlogIndexProps) {
-  const total = pageCount(posts.length);
-  const showFeatured = !category && page === 1 && posts.length > 0;
-  const [first, ...rest] = posts;
-  const featured = showFeatured ? first : undefined;
-  const listed = (showFeatured ? rest : posts).slice(showFeatured ? 0 : (page - 1) * POSTS_PER_PAGE, showFeatured ? POSTS_PER_PAGE - 1 : page * POSTS_PER_PAGE);
+// A blog listing page (all posts or one category). Every variant is its own
+// static page, so filters are plain links: shareable URLs, and each category
+// page can rank on its own. "All" opens with a large featured post — the one
+// marked `featured: true`, else the first in order — labelled "Latest" when it
+// is the newest and "Featured" otherwise. Cards follow the posts' `order`. The rest are cards, six at
+// a time with "Show more articles".
+export function BlogIndex({ posts, category }: BlogIndexProps) {
+  const featured = category ? undefined : (posts.find((post) => post.featured) ?? posts[0]);
+  const listed = posts.filter((post) => post !== featured);
+  const isNewest = featured ? posts.every((post) => post.date <= featured.date) : false;
   const available = new Set(getPosts().map((post) => post.category));
   const chips = BLOG_CATEGORIES.filter((item) => available.has(item.name));
 
@@ -81,7 +77,7 @@ export function BlogIndex({ posts, page, category }: BlogIndexProps) {
             />
             <span className="flex flex-col gap-4 px-2 lg:col-span-5 lg:pr-7">
               <span className="flex flex-wrap gap-2">
-                <Pill tone="dark">Latest</Pill>
+                <Pill tone="dark">{isNewest ? 'Latest' : 'Featured'}</Pill>
                 <Pill>{featured.category}</Pill>
               </span>
               <span className="font-serif text-[1.75rem] leading-tight font-medium tracking-[-0.02em] transition-colors group-hover:text-red md:text-[2.375rem]">
@@ -96,13 +92,16 @@ export function BlogIndex({ posts, page, category }: BlogIndexProps) {
         ) : null}
 
         {listed.length ? (
-          <ul className="grid gap-3.5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-            {listed.map((post, index) => (
-              <Reveal as="li" key={post.slug} delay={(index % 3) * 0.08}>
-                <PostCard post={toMeta(post)} />
-              </Reveal>
-            ))}
-          </ul>
+          <ShowMorePosts
+            items={listed.map((post, index) => ({
+              key: post.slug,
+              card: (
+                <Reveal delay={(index % 3) * 0.08}>
+                  <PostCard post={toMeta(post)} />
+                </Reveal>
+              ),
+            }))}
+          />
         ) : null}
 
         {!posts.length ? (
@@ -110,34 +109,6 @@ export function BlogIndex({ posts, page, category }: BlogIndexProps) {
             <p className="font-serif text-[1.75rem] font-medium">Articles are on their way</p>
             <p className="mt-2 text-body">New posts will appear here soon.</p>
           </div>
-        ) : null}
-
-        {total > 1 ? (
-          <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-4">
-            {page > 1 ? (
-              <Link href={listPath(category, page - 1)} rel="prev" className="inline-flex min-h-11 items-center px-3 text-[0.9375rem] font-semibold">
-                ← Newer
-              </Link>
-            ) : null}
-            {Array.from({ length: total }, (_, index) => index + 1).map((number) => (
-              <Link
-                key={number}
-                href={listPath(category, number)}
-                aria-current={number === page ? 'page' : undefined}
-                className={cn(
-                  'inline-flex size-11 items-center justify-center rounded-xl border text-sm font-bold',
-                  number === page ? 'border-ink bg-ink text-white' : 'border-line bg-white',
-                )}
-              >
-                {number}
-              </Link>
-            ))}
-            {page < total ? (
-              <Link href={listPath(category, page + 1)} rel="next" className="inline-flex min-h-11 items-center px-3 text-[0.9375rem] font-semibold">
-                Older →
-              </Link>
-            ) : null}
-          </nav>
         ) : null}
       </Section>
       <CtaSection title="Need help with a subject?" text="Book a free one-on-one demo class with a tutor who knows your child’s board." />

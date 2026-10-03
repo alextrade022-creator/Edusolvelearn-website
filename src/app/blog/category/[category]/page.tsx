@@ -31,5 +31,5 @@ export default async function BlogCategoryPage({ params }: { params: Promise<Par
   const slug = (await params).category;
   const category = categoryBySlug(slug);
   if (!category) notFound();
-  return <BlogIndex posts={postsInCategory(slug)} page={1} category={category} />;
+  return <BlogIndex posts={postsInCategory(slug)} category={category} />;
 }

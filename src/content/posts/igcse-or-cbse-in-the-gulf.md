@@ -4,8 +4,9 @@ description: The key differences between the two boards, and the questions to as
 category: IGCSE & IB
 date: 2026-09-03
 author: EduSolve Academic Team
-cover: /blog_images/IGCSE_or_CBSE_after_moving_to_the_Gulf.png
+cover: /blog_images/IGCSE_or_CBSE_after_moving_to_the_Gulf_new.png
 draft: true
+order: 7
 ---
 
 Many Indian families moving to the Gulf face the same decision: stay with CBSE, or switch to an international board such as IGCSE? Both are respected, and schools across the UAE, Qatar, Saudi Arabia, Bahrain, Kuwait and Oman offer them. The right choice depends less on which board is “better” and more on your child and your family’s plans.
