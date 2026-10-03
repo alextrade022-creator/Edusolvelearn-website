@@ -1,7 +1,7 @@
 'use client';
 
 import { useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, type MotionValue } from 'motion/react';
-import { createContext, useCallback, useContext, useLayoutEffect, useRef, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 
 // Scroll progress (0 → 1) of the active pin, or null when content isn't pinned.
 const PinProgressContext = createContext<MotionValue<number> | null>(null);
@@ -48,6 +48,35 @@ export function PinnedScroll({ children, distance = 90, distanceSmall, className
   );
 
   useMotionValueEvent(scrollY, 'change', update);
+
+  // After a refresh the browser puts the page back where it was, at a moment
+  // of its own choosing — sometimes before Motion's scroll tracking is ready,
+  // so no change is ever reported and effects sit in their start state (the
+  // first Life photo below its finished grid) until the visitor scrolls. So:
+  // listen to the page's own scroll events too, and for the first few seconds
+  // also check each frame whether the page has moved under us.
+  useEffect(() => {
+    if (reduceMotion) return;
+    const sync = () => update(window.scrollY);
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('pageshow', sync);
+    let last = -1;
+    let frame = 0;
+    const until = performance.now() + 3000;
+    const watch = () => {
+      if (window.scrollY !== last) {
+        last = window.scrollY;
+        sync();
+      }
+      if (performance.now() < until) frame = requestAnimationFrame(watch);
+    };
+    frame = requestAnimationFrame(watch);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('pageshow', sync);
+    };
+  }, [reduceMotion, update]);
 
   // Measure: what to pin, where to stick it so it's centred, and the scroll range.
   useLayoutEffect(() => {
@@ -106,7 +135,7 @@ export function PinnedScroll({ children, distance = 90, distanceSmall, className
 
       pinned.style.position = 'sticky';
       pinned.style.top = `${top}px`;
-      // Lets children adapt to what is pinned (see LifeChapters).
+      // Lets children adapt to what is pinned.
       block.dataset.pinMode = pinned === block ? 'block' : 'focus';
       // Room to stay pinned: a spacer after the block, or (a sticky element
       // never leaves its parent's content box) an ::after spacer in the focus

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next-image-export-optimizer';
 import { ArrowRightIcon, CheckIcon } from '@/components/icons';
 import { PinnedScroll } from '@/components/motion/PinnedScroll';
@@ -9,11 +10,11 @@ import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { CURRICULA } from '@/content/curricula';
 import { CENTRES, FOUNDER, HOME_BENEFITS, HOME_STEPS, TUTOR_CHECKS, TUTOR_QUALITIES } from '@/content/home';
-import { LIFE_CHAPTERS, LIFE_PREVIEW } from '@/content/life';
+import { LIFE_PREVIEW } from '@/content/life';
 import { CONTACT } from '@/content/site';
+import { cn } from '@/lib/cn';
 import { centreSchema } from '@/lib/structuredData';
 import { CurriculaPanels } from './CurriculaPanels';
-import { LifeChapters } from './LifeChapters';
 import { StepsTimeline } from './StepsTimeline';
 import { TutorApprovalCard } from './TutorApprovalCard';
 import { WhyTabs } from './WhyTabs';
@@ -207,22 +208,37 @@ export function CentresSection() {
 
 export function LifePreviewSection() {
   return (
-    <Section labelledBy="life-title">
-      {/* Home only: pinned while the three chapters play, then the grid. */}
-      <PinnedScroll distance={260} distanceSmall={215}>
-        <LifeChapters
-          items={LIFE_PREVIEW}
-          chapters={LIFE_CHAPTERS}
-          heading={
-            <SectionHeading
-              id="life-title"
-              eyebrow="Life at EduSolve"
-              title={LIFE_CHAPTERS.map((chapter) => chapter.phrase).join(' ')}
-              action={<ArrowLink href="/life-at-edusolve/">See life at EduSolve</ArrowLink>}
-            />
-          }
-        />
-      </PinnedScroll>
+    <Section labelledBy="life-title" className="flex flex-col gap-10 lg:gap-12">
+      <SectionHeading
+        id="life-title"
+        eyebrow="Life at EduSolve"
+        title="Real classes. Real people. Real milestones."
+        action={<ArrowLink href="/life-at-edusolve/">See life at EduSolve</ArrowLink>}
+      />
+      <ul className="grid grid-cols-2 gap-x-3.5 gap-y-6 lg:grid-cols-4 lg:gap-6">
+        {LIFE_PREVIEW.map((item, index) => (
+          <Reveal as="li" key={item.id} delay={index * 0.08}>
+            <Link href="/life-at-edusolve/" className="group flex flex-col gap-3 lg:gap-4">
+              <span className="relative block aspect-square overflow-hidden rounded-[0.875rem] bg-panel lg:rounded-2xl">
+                <Image
+                  src={item.photo}
+                  alt={item.alt}
+                  fill
+                  sizes="(min-width: 1024px) 285px, 46vw"
+                  className={cn(
+                    'object-cover transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04] motion-reduce:transition-none',
+                    item.focus === 'bottom' ? 'object-bottom' : item.focus === 'top' ? 'object-top' : 'object-center',
+                  )}
+                />
+              </span>
+              <span className="flex flex-col gap-1.5">
+                <span className="text-[0.6875rem] font-bold tracking-[0.06em] text-muted uppercase lg:text-xs">{item.category}</span>
+                <span className="truncate text-[0.9375rem] leading-snug font-bold lg:text-[1.0625rem]">{item.title}</span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </ul>
     </Section>
   );
 }

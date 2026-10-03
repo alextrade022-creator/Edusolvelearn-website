@@ -8,14 +8,14 @@ import { cn } from '@/lib/cn';
 import { useMediaQuery } from '@/lib/useMediaQuery';
 
 /** How long each reason shows before moving on. */
-const STEP_MS = 6000;
+const STEP_MS = 5000;
 /** A pause resumes by itself after this long (restarted by choosing another label). */
 const PAUSE_MS = 15000;
 
 // The six reasons as auto-playing tabs: short labels (a 3 + 3 grid of pills on
-// phones) above one large card. It moves to the next reason every 6 seconds,
+// phones) above one large card. It moves to the next reason every 5 seconds,
 // with a thin progress line under the active label; tap, click or arrow-key to
-// any label to jump (its 6 seconds start again from zero).
+// any label to jump (its 5 seconds start again from zero).
 // A pause/play button in the card's top-right corner stops and resumes it; a
 // pause lifts by itself after 15 seconds (counted again from any label chosen). Autoplay runs
 // only while the section is on screen and the browser tab is visible; with
@@ -84,7 +84,7 @@ export function WhyTabs({ benefits }: { benefits: readonly Benefit[] }) {
 
   const next = () => select((active + 1) % benefits.length);
 
-  // Choosing a label shows it with a fresh 6 seconds; while paused, it restarts
+  // Choosing a label shows it with a fresh 5 seconds; while paused, it restarts
   // the 15-second countdown instead (they're still browsing).
   const choose = (index: number) => {
     select(index);

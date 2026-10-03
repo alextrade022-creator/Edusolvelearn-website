@@ -380,64 +380,6 @@
   }
 }
 
-/* Home Life section (LifeChapters). The HTML is the finished grid; each tile's
-   photo sits in `.life-photo`, which normally just fills its square.
-   While the section is pinned, the component sets `data-chapters`, measures
-   the stage (--big-w/--big-h: the large photo; --dx/--dy: from a tile to the
-   stage's corner) and feeds in the scroll progress:
-     --wipe    0 → 1  the photo is uncovered from the bottom up
-     --settle  0 → 1  the large photo shrinks into its tile, and the chapter's
-                      wide photo (`.life-wide`) fades into the tile's own
-     --late    0 → 1  heading, labels and the remaining tile fade in */
-.life-chapters {
-  --settle: 1;
-  --late: 1;
-}
-.life-photo {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.life-photo img {
-  object-position: 50% calc(var(--focus-y, 50) * 1%);
-}
-.life-phrase,
-.life-wide {
-  display: none;
-}
-[data-chapters] .life-frame {
-  background: transparent;
-}
-[data-chapters] [data-chapter-frame] .life-photo {
-  inset: auto;
-  left: calc(var(--dx, 0px) * (1 - var(--settle)));
-  top: calc(var(--dy, 0px) * (1 - var(--settle)));
-  width: calc(100% + (var(--big-w, 100%) - 100%) * (1 - var(--settle)));
-  height: calc(100% + (var(--big-h, 100%) - 100%) * (1 - var(--settle)));
-  clip-path: inset(calc((1 - var(--wipe, 1)) * 100%) 0 0 0 round 1rem);
-}
-[data-chapters] .life-wide {
-  position: absolute;
-  inset: 0;
-  display: block;
-  /* Stays until the photo is most of the way home, then gives way to the tile's own. */
-  opacity: calc((1 - var(--settle)) * 3);
-}
-[data-chapters] .life-wide img {
-  object-position: 50% calc(var(--wide-y, 50) * 1%);
-}
-[data-chapters] .life-late,
-[data-chapters='block'] .life-heading {
-  opacity: var(--late);
-}
-[data-chapters] .life-phrase {
-  position: absolute;
-  top: var(--phrase-y, 0);
-  left: var(--phrase-x, 0);
-  z-index: 4;
-  display: block;
-}
-
 /* Home founder photo: eases from 115% to normal size while it's properly in
    view — from about 70% of it on screen ("entry 70%") until its top reaches the
    top of the screen ("cover 60%") — and zooms back in when scrolling up.

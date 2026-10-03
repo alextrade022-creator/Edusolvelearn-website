@@ -28,6 +28,8 @@ interface VideoCarouselProps {
   endCard?: ReactNode;
   /** Show the ← → buttons (tablet and up). Default true. */
   showArrows?: boolean;
+  /** Once per page load, glide slowly to the end when the row comes into view (see below). */
+  intro?: boolean;
 }
 
 /** Overscroll (px) at which the edge glow is fully lit. */
@@ -39,6 +41,11 @@ const MAX_STRETCH = 56;
 /** Rubber band: follows small pulls closely, then flattens out at MAX_STRETCH. */
 const rubber = (overshoot: number) => MAX_STRETCH * (1 - Math.exp(-overshoot / (MAX_STRETCH * 1.6)));
 const SPRING = { type: 'spring', stiffness: 210, damping: 30, mass: 0.9 } as const;
+/** Intro glide: starts this long after the row is mostly (INTRO_VISIBLE) on screen… */
+const INTRO_DELAY = 300;
+const INTRO_VISIBLE = 0.6;
+/** …and takes this long (s): the end is further away on smaller screens, so it moves faster there. */
+const introDuration = (width: number) => (width >= 1024 ? 3.75 : width >= 768 ? 4.5 : 5.5);
 
 // A single row of video cards you can grab and fling, like spinning a wheel.
 // Motion's drag handles mouse and touch: it follows the pointer, measures the
@@ -55,7 +62,7 @@ export function VideoCarousel(props: VideoCarouselProps) {
   );
 }
 
-function Carousel({ ids, heading, footer, endCard, showArrows = true }: VideoCarouselProps) {
+function Carousel({ ids, heading, footer, endCard, showArrows = true, intro = false }: VideoCarouselProps) {
   const listId = useId();
   const viewportRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -79,6 +86,7 @@ function Carousel({ ids, heading, footer, endCard, showArrows = true }: VideoCar
   const holdEdges = useRef(false); // keep the arrows' dimmed state steady during an edge bump
   const dragged = useRef(false); // a drag happened: swallow the click that ends it
   const wheelTimer = useRef<number | undefined>(undefined);
+  const introDone = useRef(false); // the intro glide has run, or the visitor took over first
   const frame = useRef<number | null>(null);
   // Arrows show from the first paint (no pop-in) and hide only if nothing overflows.
   const [edges, setEdges] = useState({ start: true, end: false, scrollable: true });
@@ -152,6 +160,7 @@ function Carousel({ ids, heading, footer, endCard, showArrows = true }: VideoCar
   }, []);
 
   const go = (direction: 1 | -1) => {
+    introDone.current = true;
     const { min } = bounds.current;
     // Step from where a previous click is heading, so quick clicks add up.
     const from = arrowTarget.current ?? nearest(clamp(x.get()));
@@ -202,6 +211,56 @@ function Carousel({ ids, heading, footer, endCard, showArrows = true }: VideoCar
     viewport.addEventListener('wheel', onWheel, { passive: false });
     return () => viewport.removeEventListener('wheel', onWheel);
   }, [x, clamp, nearest, interrupt, run, reduceMotion]);
+
+  // Intro (home page): once per page load, shortly after the row is mostly on
+  // screen, it glides slowly left until the end card is in view, then stays.
+  // Any touch, click, drag, sideways scroll, arrow or keyboard focus stops it
+  // on the spot (or cancels it before it starts); scrolling the page up or down
+  // with the pointer over the row doesn't count. Skipped if a video is already
+  // playing, and for visitors who ask for reduced motion.
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!intro || reduceMotion || !viewport) return;
+    let timer: number | undefined;
+    const takeOver = () => {
+      introDone.current = true;
+      window.clearTimeout(timer);
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry || introDone.current) return;
+        window.clearTimeout(timer);
+        if (entry.intersectionRatio < INTRO_VISIBLE) return;
+        timer = window.setTimeout(() => {
+          if (introDone.current) return;
+          introDone.current = true;
+          observer.disconnect();
+          const { min } = bounds.current;
+          if (viewport.querySelector('iframe') || x.get() <= min + 1) return;
+          run(animate(x, min, { duration: introDuration(window.innerWidth), ease: [0.45, 0, 0.55, 1] }));
+        }, INTRO_DELAY);
+      },
+      { threshold: [0, INTRO_VISIBLE] },
+    );
+    observer.observe(viewport);
+    const events = ['pointerdown', 'keydown', 'focusin'] as const;
+    const stop = () => {
+      takeOver();
+      interrupt();
+    };
+    // Only a sideways wheel/trackpad movement is the visitor moving the row.
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) stop();
+    };
+    for (const name of events) viewport.addEventListener(name, stop, { passive: true });
+    viewport.addEventListener('wheel', onWheel, { passive: true });
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+      for (const name of events) viewport.removeEventListener(name, stop);
+      viewport.removeEventListener('wheel', onWheel);
+    };
+  }, [intro, reduceMotion, x, run, interrupt]);
 
   // Swallow the click that ends a drag, so it doesn't start a video.
   const onClickCapture = (event: React.MouseEvent) => {

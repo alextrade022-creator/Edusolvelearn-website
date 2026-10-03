@@ -1,6 +1,7 @@
 import { PostCard } from '@/components/blog/PostCard';
 import { BookIcon, ChatIcon, ListCheckIcon, VideoIcon } from '@/components/icons';
 import { Reveal } from '@/components/motion/Reveal';
+import { Avatar } from '@/components/ui/Avatar';
 import { ArrowLink } from '@/components/ui/Button';
 import { FaqList } from '@/components/ui/FaqList';
 import { Section } from '@/components/ui/Section';
@@ -17,7 +18,7 @@ export function StoriesSection() {
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-6">
         <div className="flex flex-col gap-4 lg:col-span-3 lg:pt-3">
           <h2 id="stories-title" className="eyebrow">
-            Parent stories
+            Stories
           </h2>
           <p className="hidden text-[0.9375rem] leading-relaxed text-body lg:block">Real families across the Gulf, in their own words.</p>
         </div>
@@ -27,9 +28,7 @@ export function StoriesSection() {
               “{HOME_QUOTE.text}”
             </blockquote>
             <figcaption className="flex items-center gap-3.5">
-              <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-panel font-bold text-body">
-                {HOME_QUOTE.initial}
-              </span>
+              <Avatar photo={HOME_QUOTE.photo} alt={HOME_QUOTE.name} className="size-11 rounded-full border border-line" sizes="44px" />
               <span className="flex flex-col">
                 <span className="font-bold">{HOME_QUOTE.name}</span>
                 <span className="text-sm text-muted">{HOME_QUOTE.meta}</span>
@@ -38,7 +37,7 @@ export function StoriesSection() {
           </figure>
         </Reveal>
       </div>
-      {/* Carousel with a "More parent stories" end card, text link and arrows. */}
+      {/* Carousel with a "More student stories" end card, text link and arrows. */}
       <StoriesVideoRow ids={TESTIMONIAL_VIDEO_IDS} />
     </Section>
   );

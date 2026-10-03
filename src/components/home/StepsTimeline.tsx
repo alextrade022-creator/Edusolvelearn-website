@@ -1,7 +1,7 @@
 'use client';
 
-import { m, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionStyle } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { usePinProgress } from '@/components/motion/PinnedScroll';
 import type { Step } from '@/content/home';
 import { cn } from '@/lib/cn';
@@ -22,20 +22,24 @@ export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
   const ref = useRef<HTMLOListElement>(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: vertical ? ['start 0.75', 'end 0.6'] : ['start 0.85', 'end 0.55'] });
-  // When pinned, finish a little before the pin ends so the result can be seen.
+  // When pinned, follow the pin's progress, finishing a little before the pin
+  // ends so the result can be seen.
   const pin = usePinProgress();
-  const idle = useMotionValue(0);
-  const pinned = useTransform(pin ?? idle, [0, 0.85], [0, 1]);
-  const source = pin ? pinned : scrollYProgress;
+  const source = pin ?? scrollYProgress;
+  const toLine = (value: number) => (pin ? Math.min(1, Math.max(0, value / 0.85)) : value);
   const [reached, setReached] = useState(1);
   const lastCount = useRef(1);
   const frame = useRef<number | null>(null);
 
-  // Motion can emit progress changes while it is rendering <m.ol>, so the React
-  // state update is deferred to the next animation frame (and only made when the
-  // number of lit steps actually changes). Updating state synchronously here
-  // triggers React's "cannot update a component while rendering" error.
-  useMotionValueEvent(source, 'change', (value) => {
+  // The line's length (--p) is written straight onto the list, and the lit
+  // step count is React state. Both are applied on every change and once on
+  // mount — so after a refresh further down the page the timeline shows its
+  // finished state at once instead of waiting for the next scroll. The state
+  // update is deferred to the next frame (and made only when the count
+  // changes): updating it synchronously here can clash with a render.
+  const apply = (raw: number) => {
+    const value = toLine(raw);
+    ref.current?.style.setProperty('--p', String(value));
     const count = Math.max(1, Math.min(steps.length, Math.floor(value * (steps.length - 1) + 1.02)));
     if (count === lastCount.current) return;
     lastCount.current = count;
@@ -44,24 +48,27 @@ export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
       frame.current = null;
       setReached(lastCount.current);
     });
-  });
+  };
+  useMotionValueEvent(source, 'change', apply);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    if (!reduceMotion) apply(source.get());
+    return () => {
       if (frame.current !== null) cancelAnimationFrame(frame.current);
-    },
-    [],
-  );
+    };
+    // Once on mount (and if the source changes); `apply` only reads refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source, reduceMotion]);
 
   const activeCount = reduceMotion ? steps.length : reached;
-  const lineStyle: MotionStyle = { ['--p' as string]: reduceMotion ? 1 : source };
+  const lineStyle = { '--p': reduceMotion ? 1 : 0 } as CSSProperties;
   const across = !vertical;
 
   const trackBase = 'absolute top-5 bottom-14 left-5 w-px';
   const trackAcross = 'lg:top-[1.375rem] lg:right-[1.375rem] lg:bottom-auto lg:left-[1.375rem] lg:h-px lg:w-auto';
 
   return (
-    <m.ol ref={ref} style={lineStyle} className={cn('relative grid', vertical ? 'gap-10 md:gap-12' : 'gap-7 lg:grid-cols-4 lg:gap-10')}>
+    <ol ref={ref} style={lineStyle} className={cn('relative grid', vertical ? 'gap-10 md:gap-12' : 'gap-7 lg:grid-cols-4 lg:gap-10')}>
       <span aria-hidden="true" className={cn(trackBase, 'bg-line-strong', across && trackAcross)} />
       <span
         aria-hidden="true"
@@ -95,6 +102,6 @@ export function StepsTimeline({ steps, vertical = false }: StepsTimelineProps) {
           </li>
         );
       })}
-    </m.ol>
+    </ol>
   );
 }

@@ -1,5 +1,7 @@
 // Home page content (sections in page order).
 
+import { COUNTRY_COUNT, TUTOR_COUNT } from './site';
+
 export interface Stat {
   value: number;
   suffix: string;
@@ -8,8 +10,8 @@ export interface Stat {
 
 export const HOME_STATS: readonly Stat[] = [
   { value: 100000, suffix: '+', label: 'Class hours taught' },
-  { value: 1000, suffix: '+', label: 'Expert tutors' },
-  { value: 12, suffix: '+', label: 'Countries served' },
+  { value: TUTOR_COUNT, suffix: '+', label: 'Expert tutors' },
+  { value: COUNTRY_COUNT, suffix: '+', label: 'Countries served' },
   { value: 5, suffix: '+', label: 'Years of trust' },
 ];
 
@@ -51,7 +53,7 @@ export interface SelectionCheck {
 
 // PLACEHOLDER: replace with the client's real hiring process.
 export const TUTOR_CHECKS: readonly SelectionCheck[] = [
-  { label: 'Degree verified', meta: 'Qualification checked' },
+  { label: 'Qualification verified', meta: 'Strong academic foundation' },
   { label: 'Subject test passed', meta: 'Deep command of the subject' },
   { label: 'English fluency assessed', meta: 'Clear communication' },
   { label: 'Live demo approved', meta: 'Clarity and warmth' },
@@ -59,7 +61,7 @@ export const TUTOR_CHECKS: readonly SelectionCheck[] = [
 ];
 
 export const TUTOR_QUALITIES: readonly { strong: string; rest: string }[] = [
-  { strong: 'Qualified graduates and postgraduates', rest: 'with deep command of their subject.' },
+  { strong: 'Qualified subject experts', rest: 'with deep command of what they teach.' },
   { strong: 'Fluent in your child’s syllabus', rest: '— CBSE, ICSE, IGCSE, IB or American.' },
   { strong: 'Patient and encouraging', rest: '— they build confidence, not just cover chapters.' },
 ];
@@ -117,19 +119,21 @@ export interface FeaturedQuote {
   text: string;
   name: string;
   meta: string;
-  initial: string;
+  /** Photo path under public/; until then a placeholder figure shows. */
+  photo?: string | null;
 }
 
 export const HOME_QUOTE: FeaturedQuote = {
   text: 'My son actually looks forward to his maths class now. The tutor is patient and explains until he truly understands.',
   name: 'Parent of a Grade 8 student',
   meta: 'Dubai, UAE',
-  initial: 'A',
 };
 
-// YouTube testimonial video ids, shared with the Stories page.
+// Student story videos (YouTube Shorts ids), in display order: the home page
+// shows the first four, the Stories page all of them. Add new ones to the end.
 export const TESTIMONIAL_VIDEO_IDS: readonly string[] = [
-  'h08gxtANy9I', '1MthGrF7qso', 'eXrrdrb1acc', 'cNBHwtQ25NY', 'GYZ49Moa_Wk',
+  '1ENZ14dhtIE', '1MthGrF7qso', 'yOsjevRk1LQ', 'EuKFo_Vvs-I', 'X5G0mNL9fTo',
+  '5f6wCwpFTGQ', 'P9eV6t_2QeU', 'B_Jo5sRSjZw', 'qKuktTQFxP0', '_j7IUI6uwBE',
 ];
 
 export const APP_FEATURES: readonly Step[] = [

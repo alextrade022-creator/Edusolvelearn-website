@@ -117,33 +117,12 @@ export const LIFE_ITEMS: readonly LifeItem[] = [
 /** Every category an item belongs to, its main one first. */
 export const lifeCategories = (item: LifeItem): readonly LifeCategory[] => [item.category, ...(item.alsoIn ?? [])];
 
-/** A step of the home page's pinned Life section: one photo with one phrase of the heading. */
-export interface LifeChapter {
-  /** The id of an item in LIFE_PREVIEW. */
-  id: string;
-  phrase: string;
-  /** The wide photo shown large while this chapter plays (path under public/); the tile keeps the item's own photo. */
-  photo: string;
-  /** Which part of the wide photo to keep when its top and bottom are trimmed: 0 (top) to 100 (bottom). */
-  focus: number;
-}
-
 const byId = (id: string): LifeItem[] => LIFE_ITEMS.filter((item) => item.id === id);
 
-// Home page preview: one item from each category that has photos.
+// Home page preview, in this order (home only; the Life page keeps its own).
 export const LIFE_PREVIEW: readonly LifeItem[] = [
-  ...byId('five-years'),
-  ...byId('achievement-elsa-maria'),
   ...byId('centre-one-on-one'),
   ...byId('team-academic'),
-];
-
-// Played in this order; together the phrases make up the section heading.
-// The wide (16:9) photos live in public/homepage_life_at_edusolve_section_images/.
-const CHAPTER_DIR = '/homepage_life_at_edusolve_section_images';
-
-export const LIFE_CHAPTERS: readonly LifeChapter[] = [
-  { id: 'centre-one-on-one', phrase: 'Real classrooms.', photo: `${CHAPTER_DIR}/real_classrooms_initialimage1.png`, focus: 55 },
-  { id: 'team-academic', phrase: 'Real people.', photo: `${CHAPTER_DIR}/real_people_initialimage.png`, focus: 60 },
-  { id: 'five-years', phrase: 'Real milestones.', photo: `${CHAPTER_DIR}/real_milestones_initialimage.png`, focus: 45 },
+  ...byId('five-years'),
+  ...byId('achievement-elsa-maria'),
 ];
