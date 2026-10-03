@@ -1,15 +1,23 @@
 import type { Metadata } from 'next';
-import Image from 'next-image-export-optimizer';
-import { CheckIcon } from '@/components/icons';
+import { FounderCards } from '@/components/about/FounderCards';
+import { CheckIcon, ClockIcon, ShieldCheckIcon, TrendUpIcon, UserIcon } from '@/components/icons';
 import { Reveal } from '@/components/motion/Reveal';
-import { ZoomIn } from '@/components/motion/ZoomIn';
 import { ArrowLink } from '@/components/ui/Button';
 import { CtaSection } from '@/components/ui/CtaSection';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
+import { COUNTRY_COUNT } from '@/content/site';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { ABOUT_FOUNDERS, ABOUT_TRUST } from '@/content/pages';
 import { pageMetadata } from '@/lib/seo';
+
+// One meaningful icon per "Why families trust EduSolve" card (by title).
+const TRUST_ICONS: Record<string, typeof CheckIcon> = {
+  'One-on-one, always': UserIcon,
+  'Vetted tutors': ShieldCheckIcon,
+  'Gulf-friendly timings': ClockIcon,
+  'Transparent progress': TrendUpIcon,
+};
 
 export const metadata: Metadata = pageMetadata({
   title: 'About us',
@@ -22,15 +30,8 @@ const FACTS = [
   { label: 'Founded', value: '2021' },
   { label: 'Head office', value: 'Kozhikode, Kerala' },
   { label: 'Learning centres', value: '2 in Kerala' },
-  { label: 'Families served', value: '12+ countries' },
+  { label: 'Families served', value: `${COUNTRY_COUNT}+ countries` },
 ] as const;
-
-const initials = (name: string) =>
-  name
-    .split(' ')
-    .map((part) => part[0] ?? '')
-    .join('')
-    .slice(0, 2);
 
 export default function AboutPage() {
   return (
@@ -81,8 +82,11 @@ export default function AboutPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {ABOUT_TRUST.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.08} className="flex flex-col gap-3 rounded-card border border-line bg-white p-6">
-              <span className="inline-flex size-10 items-center justify-center rounded-xl bg-panel text-green">
-                <CheckIcon size={18} />
+              <span className="inline-flex size-10 items-center justify-center rounded-xl bg-panel text-ink">
+                {(() => {
+                  const Icon = TRUST_ICONS[item.title] ?? CheckIcon;
+                  return <Icon size={20} />;
+                })()}
               </span>
               <h3 className="text-title font-bold">{item.title}</h3>
               <p className="leading-relaxed text-body">{item.text}</p>
@@ -93,34 +97,7 @@ export default function AboutPage() {
 
       <Section className="flex flex-col gap-10 lg:gap-12">
         <SectionHeading eyebrow="Leadership" title="The people behind EduSolve" />
-        <div className="grid gap-6 md:grid-cols-2">
-          {ABOUT_FOUNDERS.map((person) => (
-            <article key={person.name} className="flex flex-col gap-6 rounded-panel border border-line bg-white p-4 pb-8 md:p-5 md:pb-9">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel">
-                {person.photo ? (
-                  <ZoomIn className="absolute inset-0">
-                    <Image
-                      src={person.photo}
-                      alt={`${person.name}, ${person.role}`}
-                      fill
-                      sizes="(min-width: 768px) 560px, 100vw"
-                      className="object-cover object-bottom"
-                    />
-                  </ZoomIn>
-                ) : (
-                  <div className="flex h-full items-end justify-center pb-8" aria-hidden="true">
-                    <span className="font-serif text-[5rem] font-medium text-[#85817a]">{initials(person.name)}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col gap-2 px-2">
-                <h3 className="font-serif text-[1.75rem] font-medium tracking-[-0.015em]">{person.name}</h3>
-                <p className="text-sm font-bold tracking-[0.04em] text-red uppercase">{person.role}</p>
-                <p className="mt-1 leading-relaxed text-body">{person.bio}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+        <FounderCards people={ABOUT_FOUNDERS} />
       </Section>
 
       <CtaSection />

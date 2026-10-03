@@ -4,6 +4,7 @@ import Image from 'next-image-export-optimizer';
 import { useState } from 'react';
 import { Reveal } from '@/components/motion/Reveal';
 import { lifeCategories, type LifeCategory, type LifeItem } from '@/content/life';
+import { ExpandChip } from '@/components/ui/ExpandChip';
 import { cn } from '@/lib/cn';
 import type { ImageSize } from '@/lib/imageSize';
 import { LifeLightbox } from './LifeLightbox';
@@ -16,17 +17,6 @@ const FOCUS = { center: 'object-center', top: 'object-top', bottom: 'object-bott
 const PHOTO_HOVER = 'transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04] motion-reduce:transition-none';
 // The button's hit area is stretched over its whole card; so is its focus ring.
 const OPEN_BUTTON = 'text-left outline-none after:absolute after:inset-0 after:rounded-[inherit] focus-visible:after:outline-2 focus-visible:after:outline-offset-3 focus-visible:after:outline-ink';
-
-// Small "opens larger" mark in the corner of a card's photo.
-function ExpandMark() {
-  return (
-    <span aria-hidden="true" className="pointer-events-none absolute right-1.5 bottom-1.5 grid size-7 place-items-center sm:right-2.5 sm:bottom-2.5 sm:size-9 rounded-full bg-white/90 text-ink shadow-float transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none">
-      <svg viewBox="0 0 24 24" className="size-3.5 sm:size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7" />
-      </svg>
-    </span>
-  );
-}
 
 interface LifeGalleryProps {
   items: readonly LifeItem[];
@@ -76,10 +66,10 @@ export function LifeGallery({ items, categories, sizes }: LifeGalleryProps) {
       </div>
 
       {featured ? (
-        <Reveal className="group relative grid items-center gap-6 rounded-panel border border-line bg-white p-3.5 pb-7 md:p-5 lg:grid-cols-12 lg:gap-12 lg:pb-5">
+        <Reveal className="group relative grid items-center gap-6 rounded-panel border border-line bg-white p-3.5 pb-7 transition-[border-color,box-shadow] duration-300 hover:border-line-strong hover:shadow-float md:p-5 lg:grid-cols-12 lg:gap-12 lg:pb-5">
           <div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-panel lg:col-span-7">
             <Image src={featured.photo} alt={featured.alt} fill sizes="(min-width: 1024px) 660px, 100vw" className={cn('object-cover', PHOTO_HOVER, FOCUS[featured.focus ?? 'center'])} />
-            <ExpandMark />
+            <ExpandChip onClick={() => setOpened(featured)} className="absolute right-2.5 bottom-2.5 z-10 sm:right-3.5 sm:bottom-3.5" />
           </div>
           <div className="flex flex-col gap-4 px-2 lg:col-span-5 lg:pr-7">
             <p className="flex flex-wrap gap-1.5">
@@ -102,7 +92,7 @@ export function LifeGallery({ items, categories, sizes }: LifeGalleryProps) {
       {shown.length ? (
         <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-6">
           {shown.map((item, index) => (
-            <Reveal as="li" key={item.id} delay={(index % 3) * 0.08} className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-white p-2 pb-4 sm:gap-4 sm:rounded-card sm:p-3.5 sm:pb-6 lg:p-4 lg:pb-7">
+            <Reveal as="li" key={item.id} delay={(index % 3) * 0.08} className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-white p-2 pb-4 transition-[border-color,box-shadow] duration-300 hover:border-line-strong hover:shadow-float sm:gap-4 sm:rounded-card sm:p-3.5 sm:pb-6 lg:p-4 lg:pb-7">
               <div className="relative aspect-square overflow-hidden rounded-[0.625rem] bg-panel sm:rounded-[0.875rem]">
                 <Image
                   src={item.photo}
@@ -111,19 +101,21 @@ export function LifeGallery({ items, categories, sizes }: LifeGalleryProps) {
                   sizes="(min-width: 1024px) 360px, (min-width: 768px) 30vw, 46vw"
                   className={cn('object-cover', PHOTO_HOVER, FOCUS[item.focus ?? 'center'])}
                 />
-                <ExpandMark />
+                <ExpandChip onClick={() => setOpened(item)} className="absolute right-1.5 bottom-1.5 z-10 sm:right-2.5 sm:bottom-2.5" />
               </div>
-              <div className="flex flex-col items-start gap-2 px-1 sm:px-2">
-                <span className="flex flex-wrap gap-1 sm:gap-1.5">
-                  {lifeCategories(item).map((category) => (
-                    <span key={category} className="rounded-full bg-panel px-2 py-0.5 text-[0.6875rem] font-bold text-body sm:px-3 sm:py-1 sm:text-xs">
+              <div className="flex flex-col items-start gap-2 px-0.5 sm:px-2">
+                {/* Phones: badges stay on one row (only a second badge may shorten with "…"), so cards with two badges are as tall as the rest. */}
+                <span className="flex w-full gap-[0.1875rem] max-sm:flex-nowrap sm:flex-wrap sm:gap-1.5">
+                  {lifeCategories(item).map((category, index) => (
+                    <span key={category} className={cn('truncate rounded-full bg-panel px-[0.3rem] py-0.5 text-[0.65rem] font-bold text-body sm:px-3 sm:py-1 sm:text-xs', index === 0 ? 'shrink-0' : 'min-w-0')}>
                       {category}
                     </span>
                   ))}
                 </span>
-                <h3 className="text-[0.9375rem] leading-snug font-bold sm:text-title">
-                  <button type="button" aria-haspopup="dialog" onClick={() => setOpened(item)} className={OPEN_BUTTON}>
-                    {item.title}
+                {/* One line, ending in "…" when longer (the full title is in the enlarged view). */}
+                <h3 className="w-full text-[0.9375rem] leading-snug font-bold sm:text-title">
+                  <button type="button" aria-haspopup="dialog" onClick={() => setOpened(item)} className={cn(OPEN_BUTTON, 'block w-full')}>
+                    <span className="block truncate">{item.title}</span>
                   </button>
                 </h3>
               </div>

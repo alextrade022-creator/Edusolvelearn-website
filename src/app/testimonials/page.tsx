@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { Reveal } from '@/components/motion/Reveal';
 import { CtaSection } from '@/components/ui/CtaSection';
+import { Avatar } from '@/components/ui/Avatar';
 import { PageHero } from '@/components/ui/PageHero';
+import { QuoteCards } from '@/components/ui/QuoteCards';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { VideoCarousel } from '@/components/ui/VideoCarousel';
@@ -47,9 +48,7 @@ export default function TestimonialsPage() {
               “{featured.text}”
             </blockquote>
             <figcaption className="flex items-center gap-3.5">
-              <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-panel font-bold text-body">
-                {featured.initial}
-              </span>
+              <Avatar photo={featured.photo} alt={featured.name} className="size-11 rounded-full border border-line" sizes="44px" />
               <span className="flex flex-col">
                 <span className="font-bold">{featured.name}</span>
                 <span className="text-sm text-muted">{featured.meta}</span>
@@ -59,28 +58,14 @@ export default function TestimonialsPage() {
         </Section>
       ) : null}
 
-      <Section>
+      {/* A little less space above and below the videos than the standard gap. */}
+      <Section spaced={false} className="pt-[5rem] md:pt-[6.25rem] xl:pt-[8rem]">
         <VideoCarousel ids={STORIES_PAGE_VIDEO_IDS} heading={<SectionHeading eyebrow="Video stories" title="Hear it from our students" />} />
       </Section>
 
-      <Section className="flex flex-col gap-10 lg:gap-12">
+      <Section spaced={false} className="flex flex-col gap-10 pt-[5rem] md:pt-[6.25rem] lg:gap-12 xl:pt-[8rem]">
         <SectionHeading eyebrow="From parents" title="What families tell us" />
-        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {quotes.map((quote, index) => (
-            <Reveal as="li" key={quote.text} delay={(index % 3) * 0.08} className="flex flex-col justify-between gap-6 rounded-card border border-line bg-white p-6 md:p-7">
-              <p className="font-serif text-[1.25rem] leading-snug">“{quote.text}”</p>
-              <p className="flex items-center gap-3">
-                <span aria-hidden="true" className="inline-flex size-10 items-center justify-center rounded-full bg-panel text-sm font-bold text-body">
-                  {quote.initial}
-                </span>
-                <span className="flex flex-col">
-                  <span className="text-[0.9375rem] font-bold">{quote.name}</span>
-                  <span className="text-[0.8125rem] text-muted">{quote.meta}</span>
-                </span>
-              </p>
-            </Reveal>
-          ))}
-        </ul>
+        <QuoteCards quotes={quotes} />
       </Section>
 
       <CtaSection />

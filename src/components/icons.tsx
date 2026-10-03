@@ -134,6 +134,53 @@ export const ListCheckIcon = (p: IconProps) => (
   </Svg>
 );
 
+// How it works, "What your child gets".
+export const UserIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
+  </Svg>
+);
+
+export const QuestionChatIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <path d="M4 5h16v11H9l-5 4z" />
+    <path d="M10 8.6a2 2 0 1 1 2.6 1.9c-.4.2-.6.5-.6.9v.3" />
+    <path d="M12 13.4h.01" />
+  </Svg>
+);
+
+export const ClipboardCheckIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <path d="M9 4H6.5A1.5 1.5 0 0 0 5 5.5v14A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-14A1.5 1.5 0 0 0 17.5 4H15" />
+    <rect x="9" y="2.5" width="6" height="3" rx="1" />
+    <path d="M9 13l2 2 4-4" />
+  </Svg>
+);
+
+export const MessagesIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <path d="M3 4h12v8H8l-5 3.5z" />
+    <path d="M18 8h3v11.5L17.5 17H10v-2" />
+  </Svg>
+);
+
+// About, "Why families trust EduSolve".
+export const ShieldCheckIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z" />
+    <path d="M9 12l2 2 4-4" />
+  </Svg>
+);
+
+export const TrendUpIcon = (p: IconProps) => (
+  <Svg strokeWidth={1.7} {...p}>
+    <path d="M4 20h16" />
+    <path d="M5 15l4.5-4.5 3.5 3.5L19 8" />
+    <path d="M14.5 8H19v4.5" />
+  </Svg>
+);
+
 export const LinkIcon = (p: IconProps) => (
   <Svg {...p}>
     <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />

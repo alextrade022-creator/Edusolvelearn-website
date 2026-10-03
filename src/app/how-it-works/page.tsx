@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { StepsTimeline } from '@/components/home/StepsTimeline';
-import { CheckIcon } from '@/components/icons';
+import { BookIcon, CheckIcon, ClipboardCheckIcon, ClockIcon, MessagesIcon, QuestionChatIcon, UserIcon } from '@/components/icons';
 import { Reveal } from '@/components/motion/Reveal';
 import { ButtonLink } from '@/components/ui/Button';
 import { CtaSection } from '@/components/ui/CtaSection';
@@ -9,6 +9,16 @@ import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { HIW_FEATURES, HIW_NEEDS, HIW_STEPS } from '@/content/pages';
 import { pageMetadata } from '@/lib/seo';
+
+// One meaningful icon per "What your child gets" card (by title).
+const FEATURE_ICONS: Record<string, typeof CheckIcon> = {
+  'Truly one-on-one': UserIcon,
+  'Curriculum-aligned': BookIcon,
+  'Flexible scheduling': ClockIcon,
+  'Homework & doubt support': QuestionChatIcon,
+  'Exam preparation': ClipboardCheckIcon,
+  'Parent communication': MessagesIcon,
+};
 
 export const metadata: Metadata = pageMetadata({
   title: 'How it works',
@@ -39,8 +49,11 @@ export default function HowItWorksPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {HIW_FEATURES.map((feature, index) => (
             <Reveal key={feature.title} delay={(index % 3) * 0.08} className="flex flex-col gap-3 rounded-card border border-line bg-white p-6 md:p-7">
-              <span className="inline-flex size-10 items-center justify-center rounded-xl bg-panel text-green">
-                <CheckIcon size={18} />
+              <span className="inline-flex size-10 items-center justify-center rounded-xl bg-panel text-ink">
+                {(() => {
+                  const Icon = FEATURE_ICONS[feature.title] ?? CheckIcon;
+                  return <Icon size={20} />;
+                })()}
               </span>
               <h3 className="text-title font-bold">{feature.title}</h3>
               <p className="leading-relaxed text-body">{feature.text}</p>
