@@ -14,7 +14,7 @@ import { StatsBand } from '@/components/home/StatsBand';
 import { CtaSection } from '@/components/ui/CtaSection';
 import { pageMetadata } from '@/lib/seo';
 
-const HOME_TITLE = 'EduSolve — One-on-one online tuition for Gulf families';
+const HOME_TITLE = 'EduSolve — One-on-One Online Tuition for Gulf Families';
 
 export const metadata: Metadata = {
   ...pageMetadata({
