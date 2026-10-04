@@ -46,8 +46,8 @@ export interface Person {
 }
 
 export const ABOUT_FOUNDERS: readonly Person[] = [
-  { name: 'Munavar Ali', role: 'Founder & CEO', bio: 'Leads EduSolve’s vision and teaching standards, driven by a belief that every child deserves personal attention.', photo: '/images/founder-munavar-ali.jpg' },
-  { name: 'Muhammed Jifri', role: 'Founder & CCO', bio: 'Heads growth and family relationships, making sure every parent’s experience with EduSolve feels warm and effortless.', photo: null },
+  { name: 'Munavar Ali', role: 'Founder & CEO', bio: 'Leads EduSolve’s vision and teaching standards, driven by a belief that every child deserves personal attention.', photo: '/About_page_images/founder-munavar-ali2.jpg' },
+  { name: 'Muhammed Jifri', role: 'Founder & CCO', bio: 'Heads growth and family relationships, making sure every parent’s experience with EduSolve feels warm and effortless.', photo: '/About_page_images/founder-jifri.png' },
 ];
 
 export const TUTOR_SELECTION_STAGES: readonly Step[] = [
