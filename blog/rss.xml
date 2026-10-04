@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>EduSolve blog</title>
+    <link>https://edusolvelearn.com/blog/</link>
+    <description>News, curriculum updates and study guides for parents.</description>
+    <language>en</language>
+    <atom:link href="https://edusolvelearn.com/blog/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to choose the right online tutor for your child</title>
+      <link>https://edusolvelearn.com/blog/how-to-choose-the-right-online-tutor/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/how-to-choose-the-right-online-tutor/</guid>
+      <description>A practical checklist for parents — what to look for, what to ask, and how to use a demo class to decide.</description>
+      <category>Study tips</category>
+      <pubDate>Thu, 24 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>5 study habits that make one-on-one tuition work</title>
+      <link>https://edusolvelearn.com/blog/study-habits-one-on-one/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/study-habits-one-on-one/</guid>
+      <description>Small routines at home that help your child get far more from every one-on-one class.</description>
+      <category>Study tips</category>
+      <pubDate>Thu, 20 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How to use NCERT textbooks well for board exams</title>
+      <link>https://edusolvelearn.com/blog/using-ncert-textbooks/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/using-ncert-textbooks/</guid>
+      <description>Why NCERT matters for CBSE, and a simple chapter-by-chapter routine that makes the textbook your strongest revision tool.</description>
+      <category>NCERT</category>
+      <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Understanding the CBSE Class 10 exam pattern: a parent&apos;s guide</title>
+      <link>https://edusolvelearn.com/blog/cbse-class-10-exam-pattern/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/cbse-class-10-exam-pattern/</guid>
+      <description>What the board exam looks like, how the year is structured, and how to help your child plan ahead.</description>
+      <category>CBSE</category>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How online tuition can help students improve their academic performance</title>
+      <link>https://edusolvelearn.com/blog/how-online-tuition-improves-academic-performance/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/how-online-tuition-improves-academic-performance/</guid>
+      <description>What online tuition is, how it helps students with difficult subjects and exams, and how parents can support it.</description>
+      <category>Study tips</category>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Board exam stress: how parents can help</title>
+      <link>https://edusolvelearn.com/blog/board-exam-stress-how-parents-can-help/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/board-exam-stress-how-parents-can-help/</guid>
+      <description>Practical, calm ways to support your child in the weeks before board exams — and the signs that they need more help.</description>
+      <category>Study tips</category>
+      <pubDate>Fri, 18 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>IGCSE or CBSE after moving to the Gulf?</title>
+      <link>https://edusolvelearn.com/blog/igcse-or-cbse-in-the-gulf/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/igcse-or-cbse-in-the-gulf/</guid>
+      <description>The key differences between the two boards, and the questions to ask before deciding which is right for your child.</description>
+      <category>IGCSE &amp; IB</category>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>1-to-1 tuition vs group tuition: which is right for your child?</title>
+      <link>https://edusolvelearn.com/blog/one-to-one-vs-group-tuition/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/one-to-one-vs-group-tuition/</guid>
+      <description>How 1-to-1 tuition compares with group tuition, and what each one offers your child.</description>
+      <category>Study tips</category>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How to improve your child’s concentration while studying: 10 practical tips</title>
+      <link>https://edusolvelearn.com/blog/improve-your-childs-concentration/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/improve-your-childs-concentration/</guid>
+      <description>Simple habits and a calmer study space that help children stay focused for longer.</description>
+      <category>Study tips</category>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>EduSolve turns five: thank you to our team and families</title>
+      <link>https://edusolvelearn.com/blog/edusolve-turns-five/</link>
+      <guid isPermaLink="true">https://edusolvelearn.com/blog/edusolve-turns-five/</guid>
+      <description>Five years of challenges, learning and growth — and the team that turned every problem into a solution.</description>
+      <category>EduSolve news</category>
+      <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
